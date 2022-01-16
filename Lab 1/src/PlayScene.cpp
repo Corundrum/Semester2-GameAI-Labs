@@ -25,6 +25,10 @@ void PlayScene::draw()
 void PlayScene::update()
 {
 	updateDisplayList();
+	if (Util::distance(m_pPlaneSprite->getTransform()->position, m_pPlayer->getTransform()->position) < 65)
+	{
+		TheGame::Instance().changeSceneState(END_SCENE);
+	}
 }
 
 void PlayScene::clean()
