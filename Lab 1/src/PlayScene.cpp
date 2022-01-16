@@ -207,13 +207,10 @@ void PlayScene::GUI_Function() const
 
 	ImGui::Separator();
 
-	static float float3[3] = { 0.0f, 1.0f, 1.5f };
-	if(ImGui::SliderFloat3("My Slider", float3, 0.0f, 2.0f))
+	static float float2[2] = {m_pPlaneSprite->getTransform()->position.x, m_pPlaneSprite->getTransform()->position.y};
+	if(ImGui::SliderFloat2("Plane Position", float2, 0.0f, 800.0f))
 	{
-		std::cout << float3[0] << std::endl;
-		std::cout << float3[1] << std::endl;
-		std::cout << float3[2] << std::endl;
-		std::cout << "---------------------------\n";
+		m_pPlaneSprite->getTransform()->position = glm::vec2(float2[0], float2[1]);
 	}
 	
 	ImGui::End();
