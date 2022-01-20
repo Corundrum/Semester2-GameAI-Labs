@@ -57,6 +57,10 @@ void PlayScene::start()
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 
+	m_pTarget = new Target();
+	m_pTarget->getRigidBody()->velocity = glm::vec2(1.0f, 0.0f);
+	addChild(m_pTarget);
+
 	ImGuiWindowFrame::Instance().setGUIFunction(std::bind(&PlayScene::GUI_Function, this));
 }
 

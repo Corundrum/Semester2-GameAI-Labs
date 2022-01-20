@@ -4,7 +4,8 @@
 
 #include "DisplayObject.h"
 
-class Target final : public DisplayObject {
+class Target final : public DisplayObject 
+{
 public:
 	Target();
 	~Target();
