@@ -60,6 +60,9 @@ void PlayScene::start()
 	m_pTarget = new Target();
 	addChild(m_pTarget);
 
+	m_pStarship = new Starship();
+	addChild(m_pStarship);
+
 	ImGuiWindowFrame::Instance().setGUIFunction(std::bind(&PlayScene::GUI_Function, this));
 }
 
