@@ -61,6 +61,7 @@ void PlayScene::start()
 	addChild(m_pTarget);
 
 	m_pStarship = new Starship();
+	m_pStarship->setCurrentDirection(glm::vec2(1.0f, 0.0f));
 	addChild(m_pStarship);
 
 	ImGuiWindowFrame::Instance().setGUIFunction(std::bind(&PlayScene::GUI_Function, this));
