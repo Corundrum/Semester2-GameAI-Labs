@@ -25,6 +25,8 @@ void PlayScene::draw()
 void PlayScene::update()
 {
 	updateDisplayList();
+
+	//m_pStarship->setDesiredVelocity(m_pTarget->getTransform()->position);
 }
 
 void PlayScene::clean()
@@ -62,6 +64,8 @@ void PlayScene::start()
 
 	m_pStarship = new Starship();
 	m_pStarship->setCurrentDirection(glm::vec2(1.0f, 0.0f));
+	m_pStarship->setTargetPosition(m_pTarget->getTransform()->position);
+	m_pStarship->setEnabled(false);
 	addChild(m_pStarship);
 
 	ImGuiWindowFrame::Instance().setGUIFunction(std::bind(&PlayScene::GUI_Function, this));
@@ -83,7 +87,35 @@ void PlayScene::GUI_Function() const
 	if(ImGui::SliderFloat2("Target Position", position, 0.0f, 800.0f))
 	{
 		m_pTarget->getTransform()->position = glm::vec2(position[0], position[1]);
+		m_pStarship->setTargetPosition(m_pTarget->getTransform()->position);
 	}
 	
+	ImGui::Separator();
+	//starship properties
+
+	static bool toggleSeek = false;
+	if (ImGui::Checkbox("Toggle Seek", &toggleSeek))
+	{
+		m_pStarship->setEnabled(toggleSeek);
+	}
+	
+	static float speed = m_pStarship->getMaxSpeed();
+	if (ImGui::SliderFloat("Max Speed", &speed, 0.0f, 100.0f))
+	{
+		m_pStarship->setMaxSpeed(speed);
+	}
+
+	static float acceleration_rate = m_pStarship->getAccelerationRate();
+	if (ImGui::SliderFloat("Acceleration", &acceleration_rate, 0.0f, 50.0f))
+	{
+		m_pStarship->setAccelerationRate(acceleration_rate);
+	}
+
+	static float turn_rate = m_pStarship->getTurnRate();
+	if (ImGui::SliderFloat("Turn Rate", &turn_rate, 0.0f, 20.0f))
+	{
+		m_pStarship->setTurnRate(turn_rate);
+	}
+
 	ImGui::End();
 }

@@ -84,6 +84,7 @@ void Starship::setAccelerationRate(const float rate)
 
 void Starship::setDesiredVelocity(const glm::vec2 target_position)
 {
+	setTargetPosition(target_position);
 	m_desiredVelocity = Util::normalize(target_position - getTransform()->position) * getMaxSpeed();
 	getRigidBody()->velocity = getDesiredVelocity() - getRigidBody()->velocity;
 }
@@ -91,8 +92,13 @@ void Starship::setDesiredVelocity(const glm::vec2 target_position)
 void Starship::Seek()
 {
 	//compute the target direction and magnitude
+	auto target_direction = getTargetPosition() - getTransform()->position;
 
 	//normalize the target direction
+	target_direction = Util::normalize(target_direction) - getCurrentDirection();
+
+	//change our direction towards the target
+	setCurrentDirection(target_direction);
 
 	//implement LookWhereYou'reGoing
 
@@ -100,7 +106,7 @@ void Starship::Seek()
 
 void Starship::m_move()
 {
-	//Seek();
+	Seek();
 
 	auto delta_time = TheGame::Instance().getDeltaTime();
 	auto initial_position = getTransform()->position;

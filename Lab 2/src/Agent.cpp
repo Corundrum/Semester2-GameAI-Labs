@@ -2,7 +2,7 @@
 
 #include "Util.h"
 
-Agent::Agent()
+Agent::Agent() : m_currentHeading(0.0f)
 {
 }
 
