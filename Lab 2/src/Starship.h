@@ -29,6 +29,8 @@ public:
 	//public member function
 	void Seek();
 
+	void LookWhereYoureGoing();
+
 private:
 	float m_maxSpeed;
 	float m_turnRate;

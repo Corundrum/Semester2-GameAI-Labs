@@ -18,9 +18,9 @@ Starship::Starship()
 	getRigidBody()->isColliding = false;
 
 	//starting propeties
-	m_maxSpeed = 10.0f;
+	m_maxSpeed = 20.0f;
 	m_turnRate = 5.0f;
-	m_accelerationRate = 2.0f;
+	m_accelerationRate = 4.0f;
 
 	setType(AGENT);
 }
@@ -84,39 +84,48 @@ void Starship::setAccelerationRate(const float rate)
 
 void Starship::setDesiredVelocity(const glm::vec2 target_position)
 {
-	setTargetPosition(target_position);
-	m_desiredVelocity = Util::normalize(target_position - getTransform()->position) * getMaxSpeed();
-	getRigidBody()->velocity = getDesiredVelocity() - getRigidBody()->velocity;
+	m_desiredVelocity = Util::normalize(target_position - getTransform()->position);
 }
 
 void Starship::Seek()
 {
-	//compute the target direction and magnitude
-	auto target_direction = getTargetPosition() - getTransform()->position;
+	setDesiredVelocity(getTargetPosition());
 
 	//normalize the target direction
-	target_direction = Util::normalize(target_direction) - getCurrentDirection();
+	const glm::vec2 steering_direction = getDesiredVelocity() - getCurrentDirection();
 
 	//change our direction towards the target
-	setCurrentDirection(target_direction);
+	setCurrentDirection(steering_direction); // instantly
 
-	//implement LookWhereYou'reGoing
+	getRigidBody()->acceleration = getCurrentDirection() * getAccelerationRate();
+}
 
+void Starship::LookWhereYoureGoing()
+{
 }
 
 void Starship::m_move()
 {
 	Seek();
 
-	auto delta_time = TheGame::Instance().getDeltaTime();
-	auto initial_position = getTransform()->position;
+	const float delta_time = TheGame::Instance().getDeltaTime();
+	//compute position term
+	const glm::vec2 initial_position = getTransform()->position;
 
 	//compute initial velocity
-	getRigidBody()->velocity += getCurrentDirection() * getMaxSpeed() * (delta_time);
+	const glm::vec2 velocity_term = getRigidBody()->velocity;// *delta_time;
 
 	//compute initial acceleration
-	getRigidBody()->acceleration = (getCurrentDirection() * getAccelerationRate()) * 0.5f * (delta_time);
+	const glm::vec2 acceleration_term = getRigidBody()->acceleration * 0.5f *delta_time;
 
-	//compute movement
-	getTransform()->position = initial_position + getRigidBody()->velocity + getRigidBody()->acceleration;
+	//compute new position
+	glm::vec2 final_position = initial_position + velocity_term + acceleration_term;
+
+	getTransform()->position = final_position;
+
+	//add our acceleration to velocity
+	getRigidBody()->velocity += getRigidBody()->acceleration;
+
+	//clmap velocity at max speed
+	getRigidBody()->velocity = Util::clamp(getRigidBody()->velocity, getMaxSpeed());
 }

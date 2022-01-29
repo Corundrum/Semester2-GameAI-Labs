@@ -63,8 +63,9 @@ void PlayScene::start()
 	addChild(m_pTarget);
 
 	m_pStarship = new Starship();
-	m_pStarship->setCurrentDirection(glm::vec2(1.0f, 0.0f));
+	m_pStarship->setCurrentHeading(0.0);
 	m_pStarship->setTargetPosition(m_pTarget->getTransform()->position);
+	m_pStarship->getRigidBody()->acceleration = m_pStarship->getCurrentDirection() * m_pStarship->getAccelerationRate();
 	m_pStarship->setEnabled(false);
 	addChild(m_pStarship);
 
@@ -109,12 +110,26 @@ void PlayScene::GUI_Function() const
 	if (ImGui::SliderFloat("Acceleration", &acceleration_rate, 0.0f, 50.0f))
 	{
 		m_pStarship->setAccelerationRate(acceleration_rate);
+		m_pStarship->getRigidBody()->acceleration = m_pStarship->getCurrentDirection() * m_pStarship->getAccelerationRate();
 	}
 
 	static float turn_rate = m_pStarship->getTurnRate();
 	if (ImGui::SliderFloat("Turn Rate", &turn_rate, 0.0f, 20.0f))
 	{
 		m_pStarship->setTurnRate(turn_rate);
+	}
+
+	if (ImGui::Button("Reset"))
+	{
+		//reset positions
+		m_pStarship->getTransform()->position = glm::vec2(100.0f, 400.0f);
+		m_pTarget->getTransform()->position = glm::vec2(500.0f, 100.0f);
+		//reset movement
+		m_pStarship->setCurrentHeading(0.0);
+		m_pStarship->getRigidBody()->velocity = glm::vec2(0, 0);
+		m_pStarship->getRigidBody()->acceleration = m_pStarship->getCurrentDirection() * m_pStarship->getAccelerationRate();
+		//reset target position
+		m_pStarship->setTargetPosition(m_pTarget->getTransform()->position);
 	}
 
 	ImGui::End();
