@@ -35,7 +35,7 @@ void Starship::draw()
 	const auto y = getTransform()->position.y;
 
 	// draw the target
-	TextureManager::Instance().draw("starship", x, y, 0, 255, true);
+	TextureManager::Instance().draw("starship", x, y, getCurrentHeading(), 255, true);
 }
 
 void Starship::update()
@@ -95,13 +95,28 @@ void Starship::Seek()
 	const glm::vec2 steering_direction = getDesiredVelocity() - getCurrentDirection();
 
 	//change our direction towards the target
-	setCurrentDirection(steering_direction); // instantly
+	LookWhereYoureGoing(steering_direction);
 
 	getRigidBody()->acceleration = getCurrentDirection() * getAccelerationRate();
 }
 
-void Starship::LookWhereYoureGoing()
+void Starship::LookWhereYoureGoing(const glm::vec2 target_direction)
 {
+	const float target_rotation = Util::signedAngle(getCurrentDirection(), target_direction);
+
+	const float turn_sensitivity = 5.0f;
+
+	if (abs(target_rotation) > turn_sensitivity)
+	{
+		if (target_rotation > 0.0f)
+		{
+			setCurrentHeading(getCurrentHeading() + getTurnRate());
+		}
+		else if (target_rotation < 0.0f)
+		{
+			setCurrentHeading(getCurrentHeading() - getTurnRate());
+		}
+	}
 }
 
 void Starship::m_move()
@@ -113,10 +128,10 @@ void Starship::m_move()
 	const glm::vec2 initial_position = getTransform()->position;
 
 	//compute initial velocity
-	const glm::vec2 velocity_term = getRigidBody()->velocity;// *delta_time;
+	const glm::vec2 velocity_term = getRigidBody()->velocity *delta_time;
 
 	//compute initial acceleration
-	const glm::vec2 acceleration_term = getRigidBody()->acceleration * 0.5f *delta_time;
+	const glm::vec2 acceleration_term = getRigidBody()->acceleration * 0.5f;// *delta_time;
 
 	//compute new position
 	glm::vec2 final_position = initial_position + velocity_term + acceleration_term;
