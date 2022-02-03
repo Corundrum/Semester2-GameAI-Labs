@@ -10,11 +10,15 @@ Agent::Agent()
 	m_lineColour[0] = glm::vec4(0, 1, 0, 1);
 	m_lineColour[1] = glm::vec4(0, 1, 0, 1);
 	m_lineColour[2] = glm::vec4(0, 1, 0, 1);
+	m_lineColour[3] = glm::vec4(0, 1, 0, 1);
+	m_lineColour[4] = glm::vec4(0, 1, 0, 1);
 
 	//initialize whisker collisions
 	m_collisionWhiskers[0] = false;
 	m_collisionWhiskers[1] = false;
 	m_collisionWhiskers[2] = false;
+	m_collisionWhiskers[3] = false;
+	m_collisionWhiskers[4] = false;
 
 	m_whiskerAngle = 45;
 }
@@ -65,6 +69,16 @@ glm::vec2 Agent::getMiddleLOSEndPoint() const
 glm::vec2 Agent::getRightLOSEndPoint() const
 {
 	return m_rightLOSEndpoint;
+}
+
+glm::vec2 Agent::getLeftLeftLOSEndPoint() const
+{
+	return m_leftLeftLOSEndPoint;
+}
+
+glm::vec2 Agent::getRightRightLOSEndPoint() const
+{
+	return m_rightRightLOSEndPoint;
 }
 
 bool* Agent::getCollisionWhiskers()
@@ -129,6 +143,16 @@ void Agent::setRightLOSEndPoint(const glm::vec2 point)
 	m_rightLOSEndpoint = point;
 }
 
+void Agent::setLeftLeftLOSEndPoint(const glm::vec2 point)
+{
+	m_leftLeftLOSEndPoint = point;
+}
+
+void Agent::setRightRightLOSEndPoint(const glm::vec2 point)
+{
+	m_rightRightLOSEndPoint = point;
+}
+
 void Agent::setLineColour(const int index, const glm::vec4 colour)
 {
 	m_lineColour[index] = colour;
@@ -151,6 +175,14 @@ void Agent::updateWhiskers(const float angle)
 	x = sin((getCurrentHeading() + m_whiskerAngle + 90) * Util::Deg2Rad);
 	y = cos((getCurrentHeading() + m_whiskerAngle + 90) * Util::Deg2Rad);
 	setRightLOSEndPoint(getTransform()->position + glm::vec2(x, -y) * getLOSDistance() * 0.75f);
+
+	x = sin((getCurrentHeading() - m_whiskerAngle + 45) * Util::Deg2Rad);
+	y = cos((getCurrentHeading() - m_whiskerAngle + 45) * Util::Deg2Rad);
+	setLeftLeftLOSEndPoint(getTransform()->position + glm::vec2(x, -y) * getLOSDistance() * 0.75f);
+
+	x = sin((getCurrentHeading() + m_whiskerAngle + 135) * Util::Deg2Rad);
+	y = cos((getCurrentHeading() + m_whiskerAngle + 135) * Util::Deg2Rad);
+	setRightRightLOSEndPoint(getTransform()->position + glm::vec2(x, -y) * getLOSDistance() * 0.75f);
 
 }
 

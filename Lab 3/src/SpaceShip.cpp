@@ -115,6 +115,14 @@ void SpaceShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 	{
 		target_rotation -= getTurnRate() * turn_sensitivity;
 	}
+	else if (getCollisionWhiskers()[3])
+	{
+		target_rotation += getTurnRate() * turn_sensitivity;
+	}
+	else if (getCollisionWhiskers()[4])
+	{
+		target_rotation -= getTurnRate() * turn_sensitivity;
+	}
 
 	setCurrentHeading(Util::lerpUnclamped(getCurrentHeading(), getCurrentHeading() + target_rotation, getTurnRate() * TheGame::Instance().getDeltaTime()));
 
