@@ -22,13 +22,17 @@ void PlayScene::draw()
 
 	if(m_bDebugView)
 	{
+		//draw target
 		Util::DrawCircle(m_pTarget->getTransform()->position, m_pTarget->getWidth() * 0.5f);
 
+		//draw obstacle
+		Util::DrawRect(m_pObstacle->getTransform()->position - glm::vec2(m_pObstacle->getWidth() * 0.5f, m_pObstacle->getHeight() * 0.5f), m_pObstacle->getWidth(), m_pObstacle->getHeight());
 		
 		if (m_pSpaceShip->isEnabled())
 		{
+			//draw ship
 			Util::DrawRect(m_pSpaceShip->getTransform()->position - glm::vec2(m_pSpaceShip->getWidth() * 0.5f, m_pSpaceShip->getHeight() * 0.5f), m_pSpaceShip->getWidth(), m_pSpaceShip->getHeight());
-			
+
 			//draw whiskers
 			Util::DrawLine(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getLeftLOSEndPoint(), m_pSpaceShip->getLineColour(0));
 			Util::DrawLine(m_pSpaceShip->getTransform()->position, m_pSpaceShip->getMiddleLOSEndPoint(), m_pSpaceShip->getLineColour(1));
@@ -47,7 +51,7 @@ void PlayScene::update()
 	if(m_pSpaceShip->isEnabled())
 	{
 		CollisionManager::circleAABBCheck(m_pTarget, m_pSpaceShip);
-		//CollisionManager::AABBCheck(m_pSpaceShip, m_pObstacle);
+		CollisionManager::AABBCheck(m_pSpaceShip, m_pObstacle);
 		CollisionManager::rotateAABB(m_pSpaceShip, m_pSpaceShip->getCurrentHeading());
 	}
 }
@@ -97,6 +101,7 @@ void PlayScene::start()
 	addChild(m_pObstacle);
 
 	//preload sounds
+	SoundManager::Instance().setAllVolume(30);
 	SoundManager::Instance().load("../Assets/audio/yay.ogg", "yay", SOUND_SFX);
 	SoundManager::Instance().load("../Assets/audio/thunder.ogg", "thunder", SOUND_SFX);
 
@@ -132,6 +137,14 @@ void PlayScene::GUI_Function()
 		m_pSpaceShip->setTargetPosition(m_pTarget->getTransform()->position);
 	}
 
+	// obstacle properties
+
+	static float obstacle[2] = { m_pObstacle->getTransform()->position.x, m_pObstacle->getTransform()->position.y };
+	if (ImGui::SliderFloat2("Obstacle Position", obstacle, 0.0f, 800.0f))
+	{
+		m_pObstacle->getTransform()->position = glm::vec2(obstacle[0], obstacle[1]);
+	}
+
 	ImGui::Separator();
 
 	// spaceship properties
@@ -158,6 +171,13 @@ void PlayScene::GUI_Function()
 	if (ImGui::SliderFloat("Turn Rate", &turn_rate, 0.0f, 20.0f))
 	{
 		m_pSpaceShip->setTurnRate(turn_rate);
+	}
+
+	//whisker properties
+	static float whisker_angle = m_pSpaceShip->getWhiskerAngle();
+	if (ImGui::SliderFloat("Whisker Angle", &whisker_angle, 10.0f, 60.0f))
+	{
+		m_pSpaceShip->setWhiskerAngle(whisker_angle);
 	}
 
 	if(ImGui::Button("Reset"))
