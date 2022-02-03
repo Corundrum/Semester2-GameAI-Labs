@@ -17,6 +17,8 @@ SpaceShip::SpaceShip()
 	getRigidBody()->acceleration = glm::vec2(0, 0);
 	getRigidBody()->isColliding = false;
 
+	setLOSDistance(300.0f);
+
 	// starting motion properties
 	m_maxSpeed = 20.0f; // a maximum number of pixels moved per frame
 	m_turnRate = 5.0f; // a maximum number of degrees to turn each time-step
@@ -103,19 +105,13 @@ void SpaceShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 {
 	const float target_rotation = Util::signedAngle(getCurrentDirection(), target_direction) - 90;
 
-	const float turn_sensitivity = 5.0f;
+	//const float turn_sensitivity = 3.0f;
 
-	if(abs(target_rotation) > turn_sensitivity)
-	{
-		if(target_rotation > 0.0f)
-		{
-			setCurrentHeading(getCurrentHeading() + getTurnRate());
-		}
-		else if(target_rotation < 0.0f)
-		{
-			setCurrentHeading(getCurrentHeading() - getTurnRate());
-		}
-	}	
+	setCurrentHeading(Util::lerpUnclamped(getCurrentHeading(), getCurrentHeading() + target_rotation, getTurnRate() * TheGame::Instance().getDeltaTime()));
+
+	//changes to code go here
+
+	//update whiskers(getWhiskerAngle());
 }
 
 void SpaceShip::m_move()
