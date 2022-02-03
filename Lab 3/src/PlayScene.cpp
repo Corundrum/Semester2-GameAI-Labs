@@ -205,7 +205,7 @@ void PlayScene::GUI_Function()
 		// reset ship's position
 		m_pSpaceShip->getTransform()->position = glm::vec2(100.0f, 400.0f);
 		// reset target's position
-		m_pTarget->getTransform()->position = glm::vec2(500.0f, 100.0f);
+		//m_pTarget->getTransform()->position = glm::vec2(500.0f, 100.0f);
 
 		// reset current heading (orientation), velocity and acceleration
 		m_pSpaceShip->setCurrentHeading(0.0);

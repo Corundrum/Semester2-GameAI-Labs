@@ -104,25 +104,63 @@ void SpaceShip::Seek()
 void SpaceShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 {
 	float target_rotation = Util::signedAngle(getCurrentDirection(), target_direction) - 90;
+	auto left_des = Util::signedAngle(getCurrentDirection(), (Util::normalize(getTransform()->position - getLeftLeftLOSEndPoint()) - getCurrentDirection())) - 90;
+	auto right_des = -Util::signedAngle(getCurrentDirection(), (Util::normalize(getTransform()->position - getRightRightLOSEndPoint()) - getCurrentDirection())) - 90;
 
+	if (target_rotation < 0)
+	{
+		target_rotation += 180;
+	}
 	const float turn_sensitivity = 3.0f;
 
-	if (getCollisionWhiskers()[0])
+	std::cout << target_rotation << std::endl;
+
+	//middle
+	if (getCollisionWhiskers()[1])
+	{
+		if (getCollisionWhiskers()[0])
+		{
+			target_rotation += getTurnRate() * turn_sensitivity;
+		}
+		else if (getCollisionWhiskers()[2])
+		{
+			target_rotation -= getTurnRate() * turn_sensitivity;
+		}
+		else if (target_rotation > 0)
+		{
+			target_rotation += getTurnRate() * turn_sensitivity;
+		}
+		else
+		{
+			target_rotation -= getTurnRate() * turn_sensitivity;
+		}
+	}
+
+	//left left
+	if (getCollisionWhiskers()[3])
+	{
+		left_des += getTurnRate() * turn_sensitivity;
+		target_rotation += left_des;
+	}
+	//left
+	else if (getCollisionWhiskers()[0])
 	{
 		target_rotation += getTurnRate() * turn_sensitivity;
 	}
+	//right right
+	if (getCollisionWhiskers()[4])
+	{
+		right_des += getTurnRate() * turn_sensitivity;
+		target_rotation -= right_des;
+	}
+	//right
 	else if (getCollisionWhiskers()[2])
 	{
 		target_rotation -= getTurnRate() * turn_sensitivity;
 	}
-	else if (getCollisionWhiskers()[3])
-	{
-		target_rotation += getTurnRate() * turn_sensitivity;
-	}
-	else if (getCollisionWhiskers()[4])
-	{
-		target_rotation -= getTurnRate() * turn_sensitivity;
-	}
+
+	
+	
 
 	setCurrentHeading(Util::lerpUnclamped(getCurrentHeading(), getCurrentHeading() + target_rotation, getTurnRate() * TheGame::Instance().getDeltaTime()));
 
@@ -134,7 +172,7 @@ void SpaceShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 void SpaceShip::m_move()
 {
 	Seek();
-	
+
 	//                                   final Position     position term    velocity term     acceleration term
 	// kinematic equation for motion --> Pf            =      Pi     +     Vi*(time)    +   (0.5)*Ai*(time * time)
 

@@ -178,11 +178,11 @@ void Agent::updateWhiskers(const float angle)
 
 	x = sin((getCurrentHeading() - m_whiskerAngle + 45) * Util::Deg2Rad);
 	y = cos((getCurrentHeading() - m_whiskerAngle + 45) * Util::Deg2Rad);
-	setLeftLeftLOSEndPoint(getTransform()->position + glm::vec2(x, -y) * getLOSDistance() * 0.75f);
+	setLeftLeftLOSEndPoint(getTransform()->position + glm::vec2(x, -y) * getLOSDistance() * 0.35f);
 
 	x = sin((getCurrentHeading() + m_whiskerAngle + 135) * Util::Deg2Rad);
 	y = cos((getCurrentHeading() + m_whiskerAngle + 135) * Util::Deg2Rad);
-	setRightRightLOSEndPoint(getTransform()->position + glm::vec2(x, -y) * getLOSDistance() * 0.75f);
+	setRightRightLOSEndPoint(getTransform()->position + glm::vec2(x, -y) * getLOSDistance() * 0.35f);
 
 }
 
