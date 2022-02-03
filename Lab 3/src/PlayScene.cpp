@@ -93,6 +93,9 @@ void PlayScene::start()
 	m_pSpaceShip->setEnabled(false);
 	addChild(m_pSpaceShip);
 
+	m_pObstacle = new Obstacle();
+	addChild(m_pObstacle);
+
 	//preload sounds
 	SoundManager::Instance().load("../Assets/audio/yay.ogg", "yay", SOUND_SFX);
 	SoundManager::Instance().load("../Assets/audio/thunder.ogg", "thunder", SOUND_SFX);
