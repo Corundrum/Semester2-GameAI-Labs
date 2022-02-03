@@ -46,9 +46,8 @@ void PlayScene::update()
 
 	if(m_pSpaceShip->isEnabled())
 	{
-		//CollisionManager::squaredRadiusCheck(m_pSpaceShip, m_pTarget);
 		CollisionManager::circleAABBCheck(m_pTarget, m_pSpaceShip);
-		//CollisionManager::AABBCheck(m_pTarget, m_pSpaceShip);
+		//CollisionManager::AABBCheck(m_pSpaceShip, m_pObstacle);
 		CollisionManager::rotateAABB(m_pSpaceShip, m_pSpaceShip->getCurrentHeading());
 	}
 }
@@ -93,6 +92,10 @@ void PlayScene::start()
 	m_pSpaceShip->getRigidBody()->acceleration = m_pSpaceShip->getCurrentDirection() * m_pSpaceShip->getAccelerationRate();
 	m_pSpaceShip->setEnabled(false);
 	addChild(m_pSpaceShip);
+
+	//preload sounds
+	SoundManager::Instance().load("../Assets/audio/yay.ogg", "yay", SOUND_SFX);
+	SoundManager::Instance().load("../Assets/audio/thunder.ogg", "thunder", SOUND_SFX);
 
 	ImGuiWindowFrame::Instance().setGUIFunction(std::bind(&PlayScene::GUI_Function, this));
 }
