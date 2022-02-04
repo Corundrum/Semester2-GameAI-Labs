@@ -21,7 +21,7 @@ SpaceShip::SpaceShip()
 
 	// starting motion properties
 	m_maxSpeed = 20.0f; // a maximum number of pixels moved per frame
-	m_turnRate = 5.0f; // a maximum number of degrees to turn each time-step
+	m_turnRate = 4.0f; // a maximum number of degrees to turn each time-step
 	m_accelerationRate = 4.0f; // a maximum number of pixels to add to the velocity each frame
 	
 	setType(AGENT);
@@ -121,18 +121,22 @@ void SpaceShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 		if (getCollisionWhiskers()[0])
 		{
 			target_rotation += getTurnRate() * turn_sensitivity;
+			getRigidBody()->velocity = getRigidBody()->velocity / 1.5f;
 		}
 		else if (getCollisionWhiskers()[2])
 		{
 			target_rotation -= getTurnRate() * turn_sensitivity;
+			getRigidBody()->velocity = getRigidBody()->velocity / 1.5f;
 		}
 		else if (target_rotation > 0)
 		{
-			target_rotation += getTurnRate() * turn_sensitivity;
+			target_rotation -= getTurnRate() * turn_sensitivity;
+			getRigidBody()->velocity = getRigidBody()->velocity / 2.0f;
 		}
 		else
 		{
-			target_rotation -= getTurnRate() * turn_sensitivity;
+			target_rotation += getTurnRate() * turn_sensitivity;
+			getRigidBody()->velocity = getRigidBody()->velocity / 2.0f;
 		}
 	}
 
@@ -143,9 +147,11 @@ void SpaceShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 		target_rotation += left_des;
 	}
 	//left
-	else if (getCollisionWhiskers()[0])
+	if (getCollisionWhiskers()[0])
 	{
-		target_rotation += getTurnRate() * turn_sensitivity;
+		left_des += getTurnRate() * turn_sensitivity;
+		target_rotation += left_des;
+		getRigidBody()->velocity = getRigidBody()->velocity / 1.5f;
 	}
 	//right right
 	if (getCollisionWhiskers()[4])
@@ -154,13 +160,12 @@ void SpaceShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 		target_rotation -= right_des;
 	}
 	//right
-	else if (getCollisionWhiskers()[2])
+	if (getCollisionWhiskers()[2])
 	{
-		target_rotation -= getTurnRate() * turn_sensitivity;
+		right_des += getTurnRate() * turn_sensitivity;
+		target_rotation -= right_des;
+		getRigidBody()->velocity = getRigidBody()->velocity / 1.5f;
 	}
-
-	
-	
 
 	setCurrentHeading(Util::lerpUnclamped(getCurrentHeading(), getCurrentHeading() + target_rotation, getTurnRate() * TheGame::Instance().getDeltaTime()));
 
