@@ -42,7 +42,7 @@ void SpaceShip::draw()
 
 void SpaceShip::update()
 {
-	m_move();
+	//m_move();
 }
 
 void SpaceShip::clean()
