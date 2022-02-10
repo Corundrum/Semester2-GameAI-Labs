@@ -57,9 +57,14 @@ void PlayScene::handleEvents()
 
 void PlayScene::start()
 {
+
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 	m_bDebugView = false;
+
+	//setup the grid
+	m_buildGrid();
+	auto offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
 
 	m_pTarget = new Target();
 	addChild(m_pTarget);
@@ -73,6 +78,55 @@ void PlayScene::start()
 	ImGuiWindowFrame::Instance().setGUIFunction(std::bind(&PlayScene::GUI_Function, this));
 }
 
+void PlayScene::m_buildGrid()
+{
+	const auto tile_size = Config::TILE_SIZE;
+
+	//add tiles to grid
+	for (int row = 0; row < Config::ROW_NUM; ++row)
+	{
+		for (int col = 0; col < Config::COL_NUM; ++col)
+		{
+			Tile* tile = new Tile();
+			tile->getTransform()->position = glm::vec2(col * tile_size, row * tile_size);
+			tile->setGridPosition(col, row);
+			addChild(tile);
+			tile->addLabels();
+			tile->setEnabled(false);
+			m_pGrid.push_back(tile);
+		}
+
+	}
+}
+
+bool PlayScene::m_getGridEnabled() const
+{
+	return m_isGridEnabled;
+}
+
+void PlayScene::m_setGridEnabled(const bool state)
+{
+	m_isGridEnabled = state;
+	for (auto tile : m_pGrid)
+	{
+		tile->setEnabled(m_isGridEnabled); // enables the tile
+		tile->setLabelsEnabled(m_isGridEnabled); // enables the labels
+	}
+}
+
+Tile* PlayScene::m_getTile(const int col, const int row)
+{
+	return m_pGrid[(row * Config::COL_NUM) + col];
+}
+
+Tile* PlayScene::m_getTile(glm::vec2 grid_position)
+{
+	const auto col = grid_position.x;
+	const auto row = grid_position.y;
+	return m_pGrid[(row * Config::COL_NUM) + col];
+}
+
+
 void PlayScene::GUI_Function()
 {
 	// Always open with a NewFrame
@@ -85,16 +139,11 @@ void PlayScene::GUI_Function()
 
 	ImGui::Separator();
 
-	static bool toggleSeek = m_pSpaceShip->isEnabled();
-	if (ImGui::Checkbox("Toggle Seek", &toggleSeek))
+	static bool toggleGrid = false;
+	if (ImGui::Checkbox("Toggle Grid", &toggleGrid))
 	{
-		m_pSpaceShip->setEnabled(toggleSeek);
-	}
-
-	static bool toggleDebug = false;
-	if (ImGui::Checkbox("Toggle Debug", &toggleDebug))
-	{
-		m_bDebugView = toggleDebug;
+		m_isGridEnabled = toggleGrid;
+		m_setGridEnabled(m_isGridEnabled);
 	}
 	
 	ImGui::Separator();
