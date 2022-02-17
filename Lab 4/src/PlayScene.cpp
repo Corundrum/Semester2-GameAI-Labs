@@ -104,6 +104,10 @@ void PlayScene::m_buildGrid()
 		}
 
 	}
+
+
+	//create neighbor references
+
 }
 
 bool PlayScene::m_getGridEnabled() const
@@ -162,7 +166,7 @@ void PlayScene::GUI_Function()
 
 	// target properties
 	
-	static float start_position[2] = { m_pSpaceShip->getGridPosition().x, m_pSpaceShip->getGridPosition().y};
+	static float start_position[2] = { m_pSpaceShip->getGridPosition().x, m_pSpaceShip->getGridPosition().y };
 	if (ImGui::SliderFloat2("Start Position", start_position, 0.0f, Config::COL_NUM - 1))
 	{
 		if (start_position[1] > Config::ROW_NUM - 1)
@@ -170,13 +174,13 @@ void PlayScene::GUI_Function()
 			start_position[1] = Config::ROW_NUM - 1;
 		}
 		m_getTile(m_pSpaceShip->getGridPosition())->setTileStatus(UNVISITED);
-		m_pSpaceShip->getTransform()->position = m_getTile(start_position[0], start_position[1])->getTransform()->position +  offset;
+		m_pSpaceShip->getTransform()->position = m_getTile(start_position[0], start_position[1])->getTransform()->position + offset;
 		m_pSpaceShip->setGridPosition(start_position[0], start_position[1]);
 		m_getTile(m_pSpaceShip->getGridPosition())->setTileStatus(START);
 	}
 
-	static float goal_position[2] = { m_pTarget->getGridPosition().x, m_pTarget->getGridPosition().y};
-	if(ImGui::SliderFloat2("Goal Position", goal_position, 0.0f, Config::COL_NUM - 1))
+	static float goal_position[2] = { m_pTarget->getGridPosition().x, m_pTarget->getGridPosition().y };
+	if (ImGui::SliderFloat2("Goal Position", goal_position, 0.0f, Config::COL_NUM - 1))
 	{
 		if (start_position[1] > Config::ROW_NUM - 1)
 		{

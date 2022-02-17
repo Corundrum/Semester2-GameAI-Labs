@@ -290,20 +290,20 @@
     <ClInclude Include="..\src\SpaceShip.h">
       <Filter>Game Objects</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\NavigationObject.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Heuristic.h">
+      <Filter>Enums</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\NeighbourTile.h">
       <Filter>Enums</Filter>
     </ClInclude>
     <ClInclude Include="..\src\TileStatus.h">
       <Filter>Enums</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\NavigationObject.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Tile.h">
       <Filter>Game Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Heuristic.h">
-      <Filter>Enums</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
