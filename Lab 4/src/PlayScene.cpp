@@ -234,6 +234,21 @@ void PlayScene::GUI_Function()
 	
 	ImGui::Separator();
 
+	// heuristic selection
+
+	static int radio = m_currentHeuristic;
+	ImGui::Text("Heuristic Type");
+	ImGui::RadioButton("Manhattan", &radio, MANHATTAN);
+	ImGui::SameLine();
+	ImGui::RadioButton("Euclidean", &radio, EUCLIDEAN);
+	if (m_currentHeuristic != radio)
+	{
+		m_currentHeuristic = static_cast<Heuristic>(radio);
+		m_computeTileCosts();
+	}
+
+	ImGui::Separator();
+
 	// target properties
 	
 	static int start_position[2] = { m_pSpaceShip->getGridPosition().x, m_pSpaceShip->getGridPosition().y };
