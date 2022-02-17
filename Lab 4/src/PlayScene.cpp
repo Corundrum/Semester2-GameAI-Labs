@@ -104,9 +104,54 @@ void PlayScene::m_buildGrid()
 		}
 
 	}
-
-
 	//create neighbor references
+	for (int row = 0; row < Config::ROW_NUM; ++row)
+	{
+		for (int col = 0; col < Config::COL_NUM; ++col)
+		{
+			Tile* tile = m_getTile(col, row);
+
+			//Top most row?
+			if (row == 0)
+			{
+				tile->setNeighbourTile(TOP_TILE, nullptr);
+			}
+			else
+			{
+				tile->setNeighbourTile(TOP_TILE, m_getTile(col, row - 1));
+			}
+			//Right most col?
+			if (col == Config::COL_NUM - 1)
+			{
+				tile->setNeighbourTile(RIGHT_TILE, nullptr);
+			}
+			else
+			{
+				tile->setNeighbourTile(RIGHT_TILE, m_getTile(col + 1, row));
+			}
+
+			//Bottom most row?
+			if (row == Config::ROW_NUM - 1)
+			{
+				tile->setNeighbourTile(BOTTOM_TILE, nullptr);
+			}
+			else
+			{
+				tile->setNeighbourTile(BOTTOM_TILE, m_getTile(col, row + 1));
+			}
+
+			//Left most col
+			if (col == 0)
+			{
+				tile->setNeighbourTile(LEFT_TILE, nullptr);
+			}
+			else
+			{
+				tile->setNeighbourTile(LEFT_TILE, m_getTile(col - 1, row));
+			}
+		}
+
+	}
 
 }
 
@@ -166,8 +211,8 @@ void PlayScene::GUI_Function()
 
 	// target properties
 	
-	static float start_position[2] = { m_pSpaceShip->getGridPosition().x, m_pSpaceShip->getGridPosition().y };
-	if (ImGui::SliderFloat2("Start Position", start_position, 0.0f, Config::COL_NUM - 1))
+	static int start_position[2] = { m_pSpaceShip->getGridPosition().x, m_pSpaceShip->getGridPosition().y };
+	if (ImGui::SliderInt2("Start Position", start_position, 0.0f, Config::COL_NUM - 1))
 	{
 		if (start_position[1] > Config::ROW_NUM - 1)
 		{
@@ -179,8 +224,8 @@ void PlayScene::GUI_Function()
 		m_getTile(m_pSpaceShip->getGridPosition())->setTileStatus(START);
 	}
 
-	static float goal_position[2] = { m_pTarget->getGridPosition().x, m_pTarget->getGridPosition().y };
-	if (ImGui::SliderFloat2("Goal Position", goal_position, 0.0f, Config::COL_NUM - 1))
+	static int goal_position[2] = { m_pTarget->getGridPosition().x, m_pTarget->getGridPosition().y };
+	if (ImGui::SliderInt2("Goal Position", goal_position, (int)0.0f, Config::COL_NUM - 1))
 	{
 		if (start_position[1] > Config::ROW_NUM - 1)
 		{
