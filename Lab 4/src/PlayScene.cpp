@@ -82,6 +82,8 @@ void PlayScene::start()
 	SoundManager::Instance().load("../Assets/audio/yay.ogg", "yay", SOUND_SFX);
 	SoundManager::Instance().load("../Assets/audio/thunder.ogg", "boom", SOUND_SFX);
 
+	m_computeTileCosts();
+
 	ImGuiWindowFrame::Instance().setGUIFunction(std::bind(&PlayScene::GUI_Function, this));
 }
 
@@ -172,6 +174,29 @@ void PlayScene::m_setGridEnabled(const bool state)
 
 void PlayScene::m_computeTileCosts()
 {
+	float distance = 0.0f;
+	float dx = 0.0f;
+	float dy = 0.0f;
+
+	//loop through each tile in the grid
+	for (auto tile : m_pGrid)
+	{
+		// f (distance estimate) = g (tile cost) + h (heuristic function)
+		switch (m_currentHeuristic)
+		{
+		case MANHATTAN:
+			dx = abs(tile->getGridPosition().x - m_pTarget->getGridPosition().x);
+			dy = abs(tile->getGridPosition().y - m_pTarget->getGridPosition().y);
+			distance = dx + dy;
+			break;
+		case EUCLIDEAN:
+			// compute the euclidean distance for each tile to the goal
+			distance = Util::distance(tile->getGridPosition(), m_pTarget->getGridPosition());
+			break;
+		}
+
+		tile->setTileCost(distance);
+	}
 }
 
 Tile* PlayScene::m_getTile(const int col, const int row)
