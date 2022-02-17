@@ -142,7 +142,7 @@ void PlayScene::m_buildGrid()
 				tile->setNeighbourTile(BOTTOM_TILE, m_getTile(col, row + 1));
 			}
 
-			//Left most col
+			//Left most col?
 			if (col == 0)
 			{
 				tile->setNeighbourTile(LEFT_TILE, nullptr);
@@ -265,7 +265,7 @@ void PlayScene::GUI_Function()
 	}
 
 	static int goal_position[2] = { m_pTarget->getGridPosition().x, m_pTarget->getGridPosition().y };
-	if (ImGui::SliderInt2("Goal Position", goal_position, (int)0.0f, Config::COL_NUM - 1))
+	if (ImGui::SliderInt2("Goal Position", goal_position, 0.0f, Config::COL_NUM - 1))
 	{
 		if (start_position[1] > Config::ROW_NUM - 1)
 		{
@@ -275,6 +275,7 @@ void PlayScene::GUI_Function()
 		m_pTarget->getTransform()->position = m_getTile(goal_position[0], goal_position[1])->getTransform()->position + offset;
 		m_pTarget->setGridPosition(goal_position[0], goal_position[1]);
 		m_getTile(m_pTarget->getGridPosition())->setTileStatus(GOAL);
+		m_computeTileCosts();
 	}
 
 	ImGui::End();

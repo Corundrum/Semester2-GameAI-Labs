@@ -108,8 +108,8 @@ void Tile::addLabels()
 	//status label
 	m_statusLabel = new Label("=", "Consolas", 12);
 	m_statusLabel->getTransform()->position = getTransform()->position + offset + glm::vec2(0.0f, 6.0f);
-	getParent()->addChild(m_costLabel);
-	m_costLabel->setEnabled(false);
+	getParent()->addChild(m_statusLabel);
+	m_statusLabel->setEnabled(false);
 }
 
 void Tile::setLabelsEnabled(const bool state)
