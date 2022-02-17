@@ -2,10 +2,12 @@
 #ifndef __PLAY_SCENE__
 #define __PLAY_SCENE__
 
+#include "Heuristic.h"
 #include "Scene.h"
 #include "Target.h"
 #include "SpaceShip.h"
 #include "Tile.h"
+
 
 class PlayScene : public Scene
 {
@@ -37,14 +39,15 @@ private:
 	void m_buildGrid();
 	bool m_getGridEnabled() const;
 	void m_setGridEnabled(bool state);
+	void m_computeTileCosts();
 
 	//convenience functions
 	Tile* m_getTile(int col, int row);
 	Tile* m_getTile(glm::vec2 grid_position);
 
 
-	// Debug bool
-	bool m_bDebugView;
+	//Heuristic
+	Heuristic m_currentHeuristic;
 };
 
 #endif /* defined (__PLAY_SCENE__) */

@@ -61,20 +61,22 @@ void PlayScene::start()
 
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
-	m_bDebugView = false;
 
 	//setup the grid
 	m_buildGrid();
 	auto offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
+	m_currentHeuristic = MANHATTAN;
 
 	m_pTarget = new Target();
 	m_pTarget->getTransform()->position = m_getTile(15, 11)->getTransform()->position + offset;
 	m_pTarget->setGridPosition(15.0f, 11.0f);
+	m_getTile(15, 11)->setTileStatus(GOAL);
 	addChild(m_pTarget);
 
 	m_pSpaceShip = new SpaceShip();
 	m_pSpaceShip->getTransform()->position = m_getTile(1, 3)->getTransform()->position + offset;
 	m_pSpaceShip->setGridPosition(1.0f, 3.0f);
+	m_getTile(1, 3)->setTileStatus(START);
 	addChild(m_pSpaceShip);
 
 	SoundManager::Instance().load("../Assets/audio/yay.ogg", "yay", SOUND_SFX);
@@ -117,6 +119,10 @@ void PlayScene::m_setGridEnabled(const bool state)
 		tile->setEnabled(m_isGridEnabled); // enables the tile
 		tile->setLabelsEnabled(m_isGridEnabled); // enables the labels
 	}
+}
+
+void PlayScene::m_computeTileCosts()
+{
 }
 
 Tile* PlayScene::m_getTile(const int col, const int row)
