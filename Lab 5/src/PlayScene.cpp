@@ -201,43 +201,45 @@ void PlayScene::m_computeTileCosts()
 
 void PlayScene::m_findShortestPath()
 {
-	//check if the path list is empty
+	// check if pathList is empty
 	if (m_pPathList.empty())
 	{
-		//Step 1. add start position
+		// Step 1. Add Start Position
 		Tile* start_tile = m_getTile(m_pSpaceShip->getGridPosition());
 		start_tile->setTileStatus(OPEN);
 		m_pOpenList.push_back(start_tile);
 
 		bool goal_found = false;
 
-		//Step 2. loop until the openlist is empty or the goal is found
-		while (m_pOpenList.empty() && !goal_found)
+		// Step 2. Loop until the OpenList is empty or the Goal is found
+		while (!m_pOpenList.empty() && !goal_found)
 		{
+			// initialization
 			auto min = INFINITY;
 			Tile* min_tile;
 			int min_tile_index = 0;
 			int count = 0;
 			std::vector<Tile*> neighbour_list;
-			//Step 2a. get together the neighbours to check
-			//loop through each neighbour in right-winding order
-			for (int index = 0; index < NUM_OF_NEIGHBOUR_TILES; index++)
+
+			// Step 2.a - Get together the neighbours to check
+			// loop through each neighbour in right-winding order (Top - Right - Bottom - Left)
+			for (int index = 0; index < NUM_OF_NEIGHBOUR_TILES; ++index)
 			{
 				const auto neighbour = m_pOpenList[0]->getNeighbourTile(static_cast<NeighbourTile>(index));
-				if ( neighbour == nullptr || neighbour->getTileStatus() == IMPASSABLE)
+				if (neighbour == nullptr || neighbour->getTileStatus() == IMPASSABLE)
 				{
-					continue; //ignore neighbour that are inappropriate
+					continue; // ignore neighbours that are inappropriate
 				}
 				neighbour_list.push_back(neighbour);
 			}
 
-			//Step 2b. for every neighbour in the neighbour list
+			// Step 2.b - for every neighbour in the neighbour list
 			for (auto neighbour : neighbour_list)
 			{
-				//Step 2b1. check if the neighbour is not hte goal
+				// Step 2.b1 - check if the neighbour is not the goal
 				if (neighbour->getTileStatus() != GOAL)
 				{
-					//check if neighbour tile cost is less than the minimum found so far...
+					// check if neighbour tile cost is less than minimum found so far...
 					if (neighbour->getTileCost() < min)
 					{
 						min = neighbour->getTileCost();
@@ -246,7 +248,7 @@ void PlayScene::m_findShortestPath()
 					}
 					count++;
 				}
-				else //neighbour is the goal tile
+				else // neighbour is the goal tile
 				{
 					min_tile = neighbour;
 					m_pPathList.push_back(min_tile);
@@ -255,16 +257,16 @@ void PlayScene::m_findShortestPath()
 				}
 			}
 
-			//Step 2c remove the reference of the current tile in the open list
-			m_pPathList.push_back(m_pOpenList[0]);
-			m_pOpenList.pop_back(); //empties the open list
-			
-			//Step 2d add the min_tile to the openlist
+			// Step 2.c - remove the reference of the current tile in the open list
+			m_pPathList.push_back(m_pOpenList[0]); // add the top of the open list to the path_list
+			m_pOpenList.pop_back(); // empties the open list
+
+			// Step 2.d - add the min_tile to the openList
 			m_pOpenList.push_back(min_tile);
 			min_tile->setTileStatus(OPEN);
-			neighbour_list.erase(neighbour_list.begin() + min_tile_index);
+			neighbour_list.erase(neighbour_list.begin() + min_tile_index); // remove the min_tile from the neighbour list
 
-			//Step 2e push all remaining neighbours onto the closed list
+			// Step 2.e - push all remaining neighbours onto the closed list
 			for (auto neighbour : neighbour_list)
 			{
 				if (neighbour->getTileStatus() == UNVISITED)
@@ -273,16 +275,24 @@ void PlayScene::m_findShortestPath()
 					m_ClosedList.push_back(neighbour);
 				}
 			}
-
-			// TODO: add Alex's hack
-
 		}
+
+		// Alex's hack - to correct the algorithm
+		Tile* goal = m_pPathList.at(m_pPathList.size() - 2);
+		m_pPathList.erase(m_pPathList.end() - 2);
+		m_pPathList.push_back(goal);
+
+		m_displayPathList();
 	}
 }
 
 void PlayScene::m_displayPathList()
 {
-
+	for (auto tile : m_pPathList)
+	{
+		std::cout << "(" << tile->getGridPosition().x << ", " << tile->getGridPosition().y << ")" << std::endl;
+	}
+	std::cout << "Path Length" << m_pPathList.size() << std::endl;
 }
 
 void PlayScene::m_resetPathfinding()
@@ -345,6 +355,13 @@ void PlayScene::GUI_Function()
 	{
 		m_currentHeuristic = static_cast<Heuristic>(radio);
 		m_computeTileCosts();
+	}
+
+	ImGui::Separator();
+
+	if (ImGui::Button("Find Shortest Path"))
+	{
+		m_findShortestPath();
 	}
 
 	ImGui::Separator();
