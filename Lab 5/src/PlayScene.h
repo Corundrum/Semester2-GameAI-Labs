@@ -63,6 +63,9 @@ private:
 	int moveCounter = 0;
 	bool m_shipIsMoving = false;
 	void m_moveShip();
+
+	static int start_position[2];
+	static int goal_position[2];
 };
 
 #endif /* defined (__PLAY_SCENE__) */

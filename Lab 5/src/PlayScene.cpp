@@ -27,8 +27,10 @@ void PlayScene::draw()
 void PlayScene::update()
 {
 	updateDisplayList();
-
-
+	if (m_shipIsMoving)
+	{
+		m_moveShip();
+	}
 }
 
 void PlayScene::clean()
@@ -201,6 +203,9 @@ void PlayScene::m_computeTileCosts()
 
 void PlayScene::m_findShortestPath()
 {
+	
+	
+
 	// check if pathList is empty
 	if (m_pPathList.empty())
 	{
@@ -297,17 +302,71 @@ void PlayScene::m_displayPathList()
 
 void PlayScene::m_resetPathfinding()
 {
+	//clear the tile vectors
+	m_pPathList.clear();
+	m_pPathList.shrink_to_fit();
+	m_pOpenList.clear();
+	m_pOpenList.shrink_to_fit();
+	m_ClosedList.clear();
+	m_ClosedList.shrink_to_fit();
+
+	//reset tile statuses
+	for (auto tile : m_pGrid)
+	{
+		tile->setTileStatus(UNVISITED);
+	}
+
+	m_getTile(m_pTarget->getGridPosition())->setTileStatus(GOAL);
+	goal_position[0] = m_pTarget->getGridPosition().x;
+	goal_position[1] = m_pTarget->getGridPosition().y;
+	m_getTile(m_pSpaceShip->getGridPosition())->setTileStatus(START);
+	start_position[0] = m_pSpaceShip->getGridPosition().x;
+	start_position[1] = m_pSpaceShip->getGridPosition().y;
+	moveCounter = 0;
+	m_shipIsMoving = false;
 
 }
 
 void PlayScene::m_resetSimulation()
 {
+	auto offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
+	m_resetPathfinding();
+	// clear current status of ship and target tiles
+	m_getTile(m_pTarget->getGridPosition())->setTileStatus(UNVISITED);
+	m_getTile(m_pSpaceShip->getGridPosition())->setTileStatus(UNVISITED);
 
+	// move target back to starting location
+	m_pTarget->getTransform()->position = m_getTile(15, 11)->getTransform()->position + offset;
+	m_pTarget->setGridPosition(15.0f, 11.0f);
+	m_getTile(15, 11)->setTileStatus(GOAL);
+	goal_position[0] = m_pTarget->getGridPosition().x;
+	goal_position[1] = m_pTarget->getGridPosition().y;
+
+	// move spaceship back to starting location
+	m_pSpaceShip->getTransform()->position = m_getTile(1, 3)->getTransform()->position + offset;
+	m_pSpaceShip->setGridPosition(1.0f, 3.0f);
+	m_getTile(1, 3)->setTileStatus(START);
+	start_position[0] = m_pSpaceShip->getGridPosition().x;
+	start_position[1] = m_pSpaceShip->getGridPosition().y;
 }
 
 void PlayScene::m_moveShip()
 {
-
+	auto offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
+	if (moveCounter < m_pPathList.size())
+	{
+		auto curret_path_tile_position = m_pPathList[moveCounter]->getGridPosition();
+		m_pSpaceShip->getTransform()->position = m_getTile(curret_path_tile_position)->getTransform()->position + offset;
+		m_pSpaceShip->setGridPosition(curret_path_tile_position.x, curret_path_tile_position.y);
+		if (Game::Instance().getFrames() % 20 == 0)
+		{
+			moveCounter++;
+		}
+	}
+	else
+	{
+		m_shipIsMoving = false;
+	}
 }
 
 Tile* PlayScene::m_getTile(const int col, const int row)
@@ -330,7 +389,7 @@ void PlayScene::GUI_Function()
 
 	// See examples by uncommenting the following - also look at imgui_demo.cpp in the IMGUI filter
 	//ImGui::ShowDemoWindow();
-	
+
 	ImGui::Begin("Lab  Debug Properties", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoMove);
 
 	ImGui::Separator();
@@ -341,7 +400,7 @@ void PlayScene::GUI_Function()
 		m_isGridEnabled = toggleGrid;
 		m_setGridEnabled(m_isGridEnabled);
 	}
-	
+
 	ImGui::Separator();
 
 	// heuristic selection
@@ -366,9 +425,34 @@ void PlayScene::GUI_Function()
 
 	ImGui::Separator();
 
+	if (ImGui::Button("Start"))
+	{
+		if (!m_shipIsMoving)
+		{
+			m_shipIsMoving = true;
+		}
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Reset PathFinding"))
+	{
+		m_resetPathfinding();
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Reset Simulation"))
+	{
+		m_resetSimulation();
+	}
+
+	ImGui::Separator();
+
 	// target properties
-	
-	static int start_position[2] = { m_pSpaceShip->getGridPosition().x, m_pSpaceShip->getGridPosition().y };
+
+	start_position[0] = m_pSpaceShip->getGridPosition().x;
+	start_position[1] = m_pSpaceShip->getGridPosition().y;
 	if (ImGui::SliderInt2("Start Position", start_position, 0.0f, Config::COL_NUM - 1))
 	{
 		if (start_position[1] > Config::ROW_NUM - 1)
@@ -381,7 +465,8 @@ void PlayScene::GUI_Function()
 		m_getTile(m_pSpaceShip->getGridPosition())->setTileStatus(START);
 	}
 
-	static int goal_position[2] = { m_pTarget->getGridPosition().x, m_pTarget->getGridPosition().y };
+	goal_position[0] = m_pTarget->getGridPosition().x;
+	goal_position[1] = m_pTarget->getGridPosition().y;
 	if (ImGui::SliderInt2("Goal Position", goal_position, 0.0f, Config::COL_NUM - 1))
 	{
 		if (start_position[1] > Config::ROW_NUM - 1)
@@ -397,3 +482,6 @@ void PlayScene::GUI_Function()
 
 	ImGui::End();
 }
+
+int PlayScene::start_position[2];
+int PlayScene::goal_position[2];
