@@ -69,6 +69,17 @@ void PlayScene::start()
 	auto offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
 	m_currentHeuristic = MANHATTAN;
 
+	for (int row = 0; row < Config::ROW_NUM; ++row)
+	{
+		for (int col = 0; col < Config::COL_NUM; ++col)
+		{
+			if (col == 7 && row <= 10)
+			{
+				m_pGrid[row * 20 + col]->setTileStatus(IMPASSABLE);
+			}
+		}
+	}
+
 	m_pTarget = new Target();
 	m_pTarget->getTransform()->position = m_getTile(15, 11)->getTransform()->position + offset;
 	m_pTarget->setGridPosition(15.0f, 11.0f);
