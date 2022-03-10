@@ -222,6 +222,15 @@ void PlayScene::GUI_Function()
 		m_pSpaceShip->getTransform()->position.y = shipPosition[1];
 	}
 
+	//allow ship rotation
+	static int angle;
+	if (ImGui::SliderInt("Ship Direction", &angle, -180, 180))
+	{
+		m_pSpaceShip->setCurrentHeading(angle);
+	}
+
+	ImGui::Separator();
+
 	static int targetPosition[] = { m_pTarget->getTransform()->position.x, m_pTarget->getTransform()->position.y};
 	if (ImGui::SliderInt2("Target Position", targetPosition, 0, 800))
 	{
@@ -229,6 +238,25 @@ void PlayScene::GUI_Function()
 		m_pTarget->getTransform()->position.y = targetPosition[1];
 	}
 
+	ImGui::Separator();
+
+	for (unsigned i = 0; i < m_pObstacles.size(); ++i)
+	{
+		int obsPosition[] = { m_pObstacles[i]->getTransform()->position.x, m_pObstacles[i]->getTransform()->position.y };
+		std::string label = "Obstacle" + std::to_string(i + 1) + " Position";
+		if (ImGui::SliderInt2(label.c_str(), obsPosition, 0, 800))
+		{
+			m_pObstacles[i]->getTransform()->position.x = obsPosition[0];
+			m_pObstacles[i]->getTransform()->position.y = obsPosition[1];
+		}
+	}
+
+	ImGui::Separator();
+
+	if (ImGui::SliderInt("Obstacle Buffer", &m_obstacleBuffer, 0, 100))
+	{
+		m_buildGrid();
+	}
 
 
 
