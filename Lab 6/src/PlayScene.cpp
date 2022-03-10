@@ -67,15 +67,28 @@ void PlayScene::start()
 
 	m_pSpaceShip = new SpaceShip();
 	m_pSpaceShip->getTransform()->position = glm::vec2(150.0f, 300.0f);
-	addChild(m_pSpaceShip);
+	addChild(m_pSpaceShip, 3);
 
 	// TODO add 3 obstacles
 
+	m_pObstacle1 = new Obstacle();
+	m_pObstacle1->getTransform()->position = glm::vec2(380.0f, 80.0f);
+	m_pObstacle1->setWidth(50);
+	m_pObstacle1->setHeight(50);
+	addChild(m_pObstacle1);
+
+	m_pObstacle2 = new Obstacle();
+	m_pObstacle2->getTransform()->position = glm::vec2(380.0f, 280.0f);
+	m_pObstacle2->setWidth(100);
+	addChild(m_pObstacle2);
+
+	m_pObstacle3 = new Obstacle();
+	m_pObstacle3->getTransform()->position = glm::vec2(380.0f, 480.0f);
+	addChild(m_pObstacle3);
+
 	//setup the grid
 	m_isGridEnabled = false;
-
-	// TODO m_storeObstacles();
-
+	m_storeObstacles();
 	m_buildGrid();
 	m_toggleGrid(m_isGridEnabled);
 
@@ -139,6 +152,13 @@ void PlayScene::m_checkShipLOS(DisplayObject* target_object)
 
 void PlayScene::m_storeObstacles()
 {
+	for (auto object : getDisplayList())
+	{
+		if (object->getType() == OBSTACLE)
+		{
+			m_pObstacles.push_back(static_cast<Obstacle*>(object));
+		}
+	}
 }
 
 void PlayScene::m_clearNodes()
