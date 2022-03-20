@@ -27,7 +27,7 @@ void PlayScene::draw()
 void PlayScene::update()
 {
 	updateDisplayList();
-	m_checkShipLOS(m_pTarget);
+	m_checkAgentLOS(m_pTarget);
 }
 
 void PlayScene::clean()
@@ -146,7 +146,25 @@ void PlayScene::m_toggleGrid(const bool state)
 	}
 }
 
-void PlayScene::m_checkShipLOS(DisplayObject* target_object)
+bool PlayScene::m_checkAgentLOS(Agent* agent, DisplayObject* target_object)
+{
+	return false;
+}
+
+bool PlayScene::checkPathNodeLOS(PathNode* path_node, DisplayObject* target_object)
+{
+	return false;
+}
+
+void PlayScene::m_checkAllNodesWithTarget(DisplayObject* target_object)
+{
+}
+
+void PlayScene::m_checkAllNodesWithBoth(DisplayObject* target_object)
+{
+}
+
+void PlayScene::m_checkAgentLOS(DisplayObject* target_object)
 {
 	m_pSpaceShip->setHasLOS(false);
 
