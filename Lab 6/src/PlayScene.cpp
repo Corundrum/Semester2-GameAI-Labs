@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "EventManager.h"
 #include "Config.h"
+#include <fstream>
 
 // required for IMGUI
 #include "imgui.h"
@@ -27,7 +28,20 @@ void PlayScene::draw()
 void PlayScene::update()
 {
 	updateDisplayList();
-	m_checkAgentLOS(m_pTarget);
+	m_checkAgentLOS(m_pSpaceShip, m_pTarget);
+	switch (m_LOSMode)
+	{
+	case 0:
+		m_checkAllNodesWithTarget(m_pTarget);
+		break;
+	case 1:
+		m_checkAllNodesWithTarget(m_pSpaceShip);
+		break;
+	case 2:
+		m_checkAllNodesWithBoth();
+		break;
+	}
+
 }
 
 void PlayScene::clean()
@@ -61,6 +75,20 @@ void PlayScene::start()
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 
+	std::ifstream inFile("../Assets/data/obstacles.txt");
+	while (!inFile.eof())
+	{
+		Obstacle* obstacle = new Obstacle();
+		float x, y, w, h;
+		inFile >> x >> y >> w >> h;
+		obstacle->getTransform()->position = glm::vec2(x, y);
+		obstacle->setWidth(w);
+		obstacle->setHeight(h);
+		addChild(obstacle);
+		m_pObstacles.push_back(obstacle);
+	}
+	inFile.close();
+
 	m_pTarget = new Target();
 	m_pTarget->getTransform()->position = glm::vec2(600.0f, 300.0f);
 	addChild(m_pTarget);
@@ -69,26 +97,14 @@ void PlayScene::start()
 	m_pSpaceShip->getTransform()->position = glm::vec2(150.0f, 300.0f);
 	addChild(m_pSpaceShip, 3);
 
-	// TODO add 3 obstacles
-
-	m_pObstacle1 = new Obstacle();
-	m_pObstacle1->getTransform()->position = glm::vec2(380.0f, 80.0f);
-	m_pObstacle1->setWidth(50);
-	m_pObstacle1->setHeight(50);
-	addChild(m_pObstacle1);
-
-	m_pObstacle2 = new Obstacle();
-	m_pObstacle2->getTransform()->position = glm::vec2(380.0f, 280.0f);
-	m_pObstacle2->setWidth(100);
-	addChild(m_pObstacle2);
-
-	m_pObstacle3 = new Obstacle();
-	m_pObstacle3->getTransform()->position = glm::vec2(380.0f, 480.0f);
-	addChild(m_pObstacle3);
+	//set up a few fields
+	m_LOSMode = 0;
+	m_obstacleBuffer = 0;
+	m_pathNodeLOSDistance = 1000;
+	m_setPathNodeLOSDistance(m_pathNodeLOSDistance);
 
 	//setup the grid
 	m_isGridEnabled = false;
-	m_storeObstacles();
 	m_buildGrid();
 	m_toggleGrid(m_isGridEnabled);
 
@@ -160,11 +176,11 @@ void PlayScene::m_checkAllNodesWithTarget(DisplayObject* target_object)
 {
 }
 
-void PlayScene::m_checkAllNodesWithBoth(DisplayObject* target_object)
+void PlayScene::m_checkAllNodesWithBoth()
 {
 }
 
-void PlayScene::m_checkAgentLOS(DisplayObject* target_object)
+bool PlayScene::m_checkAgentLOS(Agent* agent, DisplayObject* target_object)
 {
 	m_pSpaceShip->setHasLOS(false);
 
@@ -191,17 +207,6 @@ void PlayScene::m_checkAgentLOS(DisplayObject* target_object)
 
 }
 
-void PlayScene::m_storeObstacles()
-{
-	for (auto object : getDisplayList())
-	{
-		if (object->getType() == OBSTACLE)
-		{
-			m_pObstacles.push_back(static_cast<Obstacle*>(object));
-		}
-	}
-}
-
 void PlayScene::m_clearNodes()
 {
 	m_pGrid.clear();
@@ -212,6 +217,10 @@ void PlayScene::m_clearNodes()
 			removeChild(object);
 		}
 	}
+}
+
+void PlayScene::m_setPathNodeLOSDistance(int dist)
+{
 }
 
 void PlayScene::GUI_Function()
@@ -280,5 +289,3 @@ void PlayScene::GUI_Function()
 
 	ImGui::End();
 }
-
-int PlayScene::m_obstacleBuffer;

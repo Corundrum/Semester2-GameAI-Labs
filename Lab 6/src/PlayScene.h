@@ -42,8 +42,9 @@ private:
 	bool m_checkAgentLOS(Agent* agent, DisplayObject* target_object);
 	bool checkPathNodeLOS(PathNode* path_node, DisplayObject* target_object);
 	void m_checkAllNodesWithTarget(DisplayObject* target_object);
-	void m_checkAllNodesWithBoth(DisplayObject* target_object);
+	void m_checkAllNodesWithBoth();
 	void m_clearNodes();
+	void m_setPathNodeLOSDistance(int dist);
 
 	int m_LOSMode;
 	int m_obstacleBuffer;
