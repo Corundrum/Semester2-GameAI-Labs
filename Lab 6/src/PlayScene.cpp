@@ -40,6 +40,9 @@ void PlayScene::update()
 	case 2:
 		m_checkAllNodesWithBoth();
 		break;
+	case 3:
+		m_connectTargets();
+		break;
 	}
 
 }
@@ -190,6 +193,28 @@ void PlayScene::m_checkAllNodesWithBoth()
 	}
 }
 
+void PlayScene::m_connectTargets()
+{
+	for (auto path_node : m_pGrid)
+	{
+		bool LOSWithSpaceShip = checkPathNodeLOS(path_node, m_pSpaceShip);
+		bool LOSWithTarget = checkPathNodeLOS(path_node, m_pTarget);
+
+		if (LOSWithSpaceShip || LOSWithTarget)
+		{
+			path_node->setHasLOS(true);
+		}
+		else
+		{
+			path_node->setHasLOS(false);
+		}
+
+		//path_node->setHasLOS(LOSWithSpaceShip || LOSWithTarget ? true : false);
+
+		
+	}
+}
+
 bool PlayScene::m_checkAgentLOS(Agent* agent, DisplayObject* target_object)
 {
 	bool hasLOS = false;
@@ -238,6 +263,15 @@ void PlayScene::m_setPathNodeLOSDistance(int dist)
 	}
 }
 
+void PlayScene::findPath(Agent* agent, DisplayObject* target_object)
+{
+	if (agent->hasLOS())
+	{
+		std::cout << "The Path is Clear" << std::endl;
+	}
+	//else if ()
+}
+
 void PlayScene::GUI_Function()
 {
 	auto offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
@@ -284,6 +318,21 @@ void PlayScene::GUI_Function()
 	{
 		ImGui::SameLine();
 		ImGui::Text("<Active>");
+	}
+
+	if (ImGui::Button("Connect Nodes", { 300, 20 }))
+	{
+		m_LOSMode = 3;
+	}
+	if (m_LOSMode == 3)
+	{
+		ImGui::SameLine();
+		ImGui::Text("<Active>");
+	}
+
+	if (ImGui::Button("Find Path"))
+	{
+
 	}
 
 	ImGui::Separator();
