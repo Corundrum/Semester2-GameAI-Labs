@@ -22,7 +22,15 @@ PathNode::~PathNode()
 void PathNode::draw()
 {
 	// draw the node
-	Util::DrawRect(getTransform()->position - glm::vec2(5, 5), getWidth(), getHeight(), getLOSColour());
+
+	if (hasLOS())
+	{
+		Util::DrawFilledRect(getTransform()->position - glm::vec2(5, 5), getWidth(), getHeight(), glm::vec4(0, 0.75, 0, 1));
+	}
+	else
+	{
+		Util::DrawRect(getTransform()->position - glm::vec2(5, 5), getWidth(), getHeight(), getLOSColour());
+	}
 }
 
 void PathNode::update()

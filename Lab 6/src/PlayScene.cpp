@@ -162,49 +162,60 @@ void PlayScene::m_toggleGrid(const bool state)
 	}
 }
 
-bool PlayScene::m_checkAgentLOS(Agent* agent, DisplayObject* target_object)
-{
-	return false;
-}
-
 bool PlayScene::checkPathNodeLOS(PathNode* path_node, DisplayObject* target_object)
 {
-	return false;
+	auto targetDirection = target_object->getTransform()->position - path_node->getTransform()->position;
+	auto normalizedDirection = Util::normalize(targetDirection);
+	path_node->setCurrentDirection(normalizedDirection);
+
+
+	return m_checkAgentLOS(path_node, target_object);
 }
 
 void PlayScene::m_checkAllNodesWithTarget(DisplayObject* target_object)
 {
+	for (auto path_node : m_pGrid)
+	{
+		checkPathNodeLOS(path_node, target_object);
+	}
 }
 
 void PlayScene::m_checkAllNodesWithBoth()
 {
+	for (auto path_node : m_pGrid)
+	{
+		bool LOSWithSpaceShip = checkPathNodeLOS(path_node, m_pSpaceShip);
+		bool LOSWithTarget = checkPathNodeLOS(path_node, m_pTarget);
+		path_node->setHasLOS(LOSWithSpaceShip && LOSWithTarget ? true : false);
+	}
 }
 
 bool PlayScene::m_checkAgentLOS(Agent* agent, DisplayObject* target_object)
 {
-	m_pSpaceShip->setHasLOS(false);
+	bool hasLOS = false;
+	agent->setHasLOS(hasLOS);
 
-	auto ShipToTargetDistance = Util::getClosestEdge(m_pSpaceShip->getTransform()->position, target_object);
-	if (ShipToTargetDistance <= m_pSpaceShip->getLOSDistance())
+	auto AgentToTargetDistance = Util::getClosestEdge(agent->getTransform()->position, target_object);
+	if (AgentToTargetDistance <= agent->getLOSDistance())
 	{
 		std::vector<DisplayObject*> contactList;
+
 		for (auto object : getDisplayList())
 		{
-			if (object->getType() == PATH_NODE) { continue; } // ignore path nodes
-			if (object->getType() != m_pSpaceShip->getType() && object->getType() != target_object->getType())
-			{
-				//check if object is closer to spaceship than target
-				auto ShipToObjectDistance = Util::getClosestEdge(m_pSpaceShip->getTransform()->position, object);
-				if (ShipToObjectDistance <= ShipToTargetDistance)
-				{
-					contactList.push_back(object);
-				}
+			auto AgentToObjectDistance = Util::getClosestEdge(agent->getTransform()->position, object);
+
+			if (AgentToObjectDistance > AgentToTargetDistance) { continue; }
+			
+			if ((object->getType() != AGENT) && (object->getType() != PATH_NODE) && (object->getType() != TARGET))
+			{	
+				contactList.push_back(object);
 			}
 		}
-		auto hasLOS = CollisionManager::LOSCheck(m_pSpaceShip, m_pSpaceShip->getTransform()->position + m_pSpaceShip->getCurrentDirection() * m_pSpaceShip->getLOSDistance(), contactList, target_object);
-		m_pSpaceShip->setHasLOS(hasLOS);
+		const glm::vec2 agentEndPoint = agent->getTransform()->position + agent->getCurrentDirection() * agent->getLOSDistance();
+		hasLOS = CollisionManager::LOSCheck(agent, agentEndPoint, contactList, target_object);
+		agent->setHasLOS(hasLOS);
 	}
-
+	return hasLOS;
 }
 
 void PlayScene::m_clearNodes()
@@ -221,6 +232,10 @@ void PlayScene::m_clearNodes()
 
 void PlayScene::m_setPathNodeLOSDistance(int dist)
 {
+	for (auto path_node : m_pGrid)
+	{
+		path_node->setLOSDistance((float)dist);
+	}
 }
 
 void PlayScene::GUI_Function()
@@ -239,6 +254,37 @@ void PlayScene::GUI_Function()
 		m_toggleGrid(m_isGridEnabled);
 	}
 
+	ImGui::Separator();
+
+	if (ImGui::Button("Node LOS to Target", { 300, 20 } ))
+	{
+		m_LOSMode = 0;
+	}
+	if (m_LOSMode == 0)
+	{
+		ImGui::SameLine();
+		ImGui::Text("<Active>");
+	}
+
+	if (ImGui::Button("Node LOS to SpaceShip", { 300, 20 } ))
+	{
+		m_LOSMode = 1;
+	}
+	if (m_LOSMode == 1)
+	{
+		ImGui::SameLine();
+		ImGui::Text("<Active>");
+	}
+
+	if (ImGui::Button("Node LOS to Both", { 300, 20 } ))
+	{
+		m_LOSMode = 2;
+	}
+	if (m_LOSMode == 2)
+	{
+		ImGui::SameLine();
+		ImGui::Text("<Active>");
+	}
 
 	ImGui::Separator();
 
