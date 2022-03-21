@@ -45,6 +45,11 @@ void PlayScene::update()
 		break;
 	}
 
+	if (drawline)
+	{
+		Util::DrawLine(m_pSpaceShip->getTransform()->position, MiddleNode->getTransform()->position);
+		Util::DrawLine(m_pTarget->getTransform()->position, MiddleNode->getTransform()->position, glm::vec4(0, 0, 1, 1));
+	}
 }
 
 void PlayScene::clean()
@@ -200,7 +205,7 @@ void PlayScene::m_connectTargets()
 		bool LOSWithSpaceShip = checkPathNodeLOS(path_node, m_pSpaceShip);
 		bool LOSWithTarget = checkPathNodeLOS(path_node, m_pTarget);
 
-		if (LOSWithSpaceShip || LOSWithTarget)
+		if ((LOSWithSpaceShip || LOSWithTarget))
 		{
 			path_node->setHasLOS(true);
 		}
@@ -209,8 +214,8 @@ void PlayScene::m_connectTargets()
 			path_node->setHasLOS(false);
 		}
 
-		//path_node->setHasLOS(LOSWithSpaceShip || LOSWithTarget ? true : false);
-
+		path_node->setHasLOS(LOSWithSpaceShip || LOSWithTarget ? true : false);
+	
 		
 	}
 }
@@ -265,11 +270,40 @@ void PlayScene::m_setPathNodeLOSDistance(int dist)
 
 void PlayScene::findPath(Agent* agent, DisplayObject* target_object)
 {
-	if (agent->hasLOS())
+	std::vector<PathNode*> pathlist;
+	
+
+	for (auto path_node : m_pGrid)
 	{
-		std::cout << "The Path is Clear" << std::endl;
+		bool LOSWithSpaceShip = checkPathNodeLOS(path_node, m_pSpaceShip);
+		bool LOSWithTarget = checkPathNodeLOS(path_node, m_pTarget);
+
+		if (LOSWithSpaceShip || LOSWithTarget)
+		{
+			pathlist.push_back(path_node);
+		}
+
 	}
-	//else if ()
+	for (auto path : pathlist)
+	{
+		auto agentDistance = Util::distance(agent->getTransform()->position, path->getTransform()->position);
+		auto targetDistance = Util::distance(target_object->getTransform()->position, path->getTransform()->position);
+		
+		//auto MiddleDistance = (Util::distance(agent->getTransform()->position, target_object->getTransform()->position) / 2);
+		double lowestDistance = 10000;
+		
+
+		if ((MiddleNode == nullptr) || ((agentDistance + targetDistance) / 2) <= lowestDistance)
+		{
+			lowestDistance = ((agentDistance + targetDistance) / 2);
+			MiddleNode = path;
+		}
+
+		std::cout << lowestDistance << std::endl;
+		
+	}
+	std::cout << std::endl << std::endl << std::endl << MiddleNode->getTransform()->position.x << ", " << MiddleNode->getTransform()->position.y << std::endl;
+	drawline = true;
 }
 
 void PlayScene::GUI_Function()
@@ -332,7 +366,7 @@ void PlayScene::GUI_Function()
 
 	if (ImGui::Button("Find Path"))
 	{
-
+		findPath(m_pSpaceShip, m_pTarget);
 	}
 
 	ImGui::Separator();

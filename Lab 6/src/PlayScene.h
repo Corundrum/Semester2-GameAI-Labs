@@ -34,6 +34,7 @@ private:
 	SpaceShip* m_pSpaceShip;
 	std::vector<Obstacle*> m_pObstacles;
 
+	PathNode* MiddleNode;
 
 	// pathnode objects objects and functions
 	std::vector<PathNode*> m_pGrid;
@@ -47,6 +48,8 @@ private:
 	void m_clearNodes();
 	void m_setPathNodeLOSDistance(int dist);
 	void findPath(Agent* agent, DisplayObject* target_object);
+
+	bool drawline = false;
 
 	int m_LOSMode;
 	int m_obstacleBuffer;

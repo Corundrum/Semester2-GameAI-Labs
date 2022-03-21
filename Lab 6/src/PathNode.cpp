@@ -40,3 +40,4 @@ void PathNode::update()
 void PathNode::clean()
 {
 }
+
