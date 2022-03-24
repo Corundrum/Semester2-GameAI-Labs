@@ -189,6 +189,9 @@
     <ClCompile Include="..\src\CloseCombatCondition.cpp">
       <Filter>Decision\Conditions</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\DecisionTree.cpp">
+      <Filter>Decision\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\StartScene.h">
@@ -391,6 +394,9 @@
     </ClInclude>
     <ClInclude Include="..\src\CloseCombatCondition.h">
       <Filter>Decision\Conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\DecisionTree.h">
+      <Filter>Decision\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
