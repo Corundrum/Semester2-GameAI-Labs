@@ -180,6 +180,15 @@
     <ClCompile Include="..\src\MoveToPlayerAction.cpp">
       <Filter>Decision\Actions</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\LOSCondition.cpp">
+      <Filter>Decision\Conditions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RadiusCondition.cpp">
+      <Filter>Decision\Conditions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CloseCombatCondition.cpp">
+      <Filter>Decision\Conditions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\StartScene.h">
@@ -356,9 +365,6 @@
     <ClInclude Include="..\src\ActionNode.h">
       <Filter>Decision\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\ConditionNode.h">
-      <Filter>Decision\Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\TreeNode.h">
       <Filter>Decision\Core</Filter>
     </ClInclude>
@@ -373,6 +379,18 @@
     </ClInclude>
     <ClInclude Include="..\src\MoveToPlayerAction.h">
       <Filter>Decision\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ConditionNode.h">
+      <Filter>Decision\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\LOSCondition.h">
+      <Filter>Decision\Conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\RadiusCondition.h">
+      <Filter>Decision\Conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CloseCombatCondition.h">
+      <Filter>Decision\Conditions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
