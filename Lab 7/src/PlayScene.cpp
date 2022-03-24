@@ -42,7 +42,7 @@ void PlayScene::update()
 		break;
 	}
 	// Make decision
-
+	decisionTree->makeDecision();
 }
 
 void PlayScene::clean()
