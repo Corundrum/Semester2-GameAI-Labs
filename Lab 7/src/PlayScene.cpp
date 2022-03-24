@@ -114,7 +114,9 @@ void PlayScene::start()
 	m_toggleGrid(m_isGridEnabled);
 
 	// Create decision tree
-	
+	decisionTree = new DecisionTree(m_pSpaceShip);
+	decisionTree->display();
+	decisionTree->makeDecision();
 
 	SoundManager::Instance().load("../Assets/audio/yay.ogg", "yay", SOUND_SFX);
 	SoundManager::Instance().load("../Assets/audio/thunder.ogg", "boom", SOUND_SFX);
