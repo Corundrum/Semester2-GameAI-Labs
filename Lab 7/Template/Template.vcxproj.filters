@@ -168,6 +168,9 @@
     <ClCompile Include="..\src\Agent.cpp">
       <Filter>Decision\Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\PatrolAction.cpp">
+      <Filter>Decision\Actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\StartScene.h">
@@ -349,6 +352,9 @@
     </ClInclude>
     <ClInclude Include="..\src\TreeNode.h">
       <Filter>Decision\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PatrolAction.h">
+      <Filter>Decision\Actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
