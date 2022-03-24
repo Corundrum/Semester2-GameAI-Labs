@@ -81,7 +81,7 @@ void PlayScene::start()
 	// Intentionally put target here so they can hide in cloud. ;)
 	m_pTarget = new Target();
 	m_pTarget->getTransform()->position = glm::vec2(500.f, 300.f);
-	addChild(m_pTarget);
+	addChild(m_pTarget, 2);
 
 	// New Obstacle creation
 	std::ifstream inFile("../Assets/data/obstacles.txt");
@@ -93,7 +93,7 @@ void PlayScene::start()
 		obstacle->getTransform()->position = glm::vec2(x, y);
 		obstacle->setWidth(w);
 		obstacle->setHeight(h);
-		addChild(obstacle);
+		addChild(obstacle, 1);
 		m_pObstacles.push_back(obstacle);
 	}
 	inFile.close();
@@ -275,7 +275,7 @@ void PlayScene::m_buildGrid()
 			}
 			if (keepNode)
 			{
-				addChild(path_node);
+				addChild(path_node, 0);
 				m_pGrid.push_back(path_node);
 			}
 			else delete path_node;
