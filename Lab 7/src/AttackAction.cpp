@@ -11,6 +11,9 @@ AttackAction::~AttackAction()
 
 void AttackAction::Action()
 {
-	std::cout << "Performing " << m_name << std::endl;
-	getAgent()->setActionState(ATTACK);
+	if (getAgent()->getActionState() != ATTACK)
+	{
+		std::cout << "Performing " << m_name << std::endl;
+	}
+	getAgent()->attack();
 }

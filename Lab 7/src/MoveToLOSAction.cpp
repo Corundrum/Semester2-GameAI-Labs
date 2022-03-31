@@ -11,6 +11,9 @@ MoveToLOSAction::~MoveToLOSAction()
 
 void MoveToLOSAction::Action()
 {
-	std::cout << "Performing " << m_name << std::endl;
-	getAgent()->setActionState(MOVE_TO_LOS);
+	if (getAgent()->getActionState() != MOVE_TO_LOS)
+	{
+		std::cout << "Performing " << m_name << std::endl;
+	}
+	getAgent()->moveToLOS();
 }

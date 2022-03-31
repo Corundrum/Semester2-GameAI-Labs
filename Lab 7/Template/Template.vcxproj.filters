@@ -195,6 +195,12 @@
     <ClCompile Include="..\src\CloseCombatEnemy.cpp">
       <Filter>Decision\Agents</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\MoveToRangeAction.cpp">
+      <Filter>Decision\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RangedCombatEnemy.cpp">
+      <Filter>Decision\Agents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\StartScene.h">
@@ -402,6 +408,12 @@
       <Filter>Decision\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\src\CloseCombatEnemy.h">
+      <Filter>Decision\Agents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MoveToRangeAction.h">
+      <Filter>Decision\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\RangedCombatEnemy.h">
       <Filter>Decision\Agents</Filter>
     </ClInclude>
   </ItemGroup>
