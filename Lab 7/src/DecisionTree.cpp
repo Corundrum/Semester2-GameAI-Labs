@@ -6,14 +6,11 @@
 #include <iostream>
 
 DecisionTree::DecisionTree()
-{
-	m_buildTree();
-}
+= default;
 
 DecisionTree::DecisionTree(Agent* agent)
 {
 	m_agent = agent;
-	m_buildTree();
 }
 
 DecisionTree::~DecisionTree()
@@ -42,6 +39,26 @@ RadiusCondition* DecisionTree::getRadiusNode() const
 CloseCombatCondition* DecisionTree::getCloseCombatNode() const
 {
 	return m_CloseCombatNode;
+}
+
+std::vector<TreeNode*>& DecisionTree::getTree()
+{
+	return m_treeNodeList;
+}
+
+void DecisionTree::setLOSNode(LOSCondition* node)
+{
+	m_LOSNode = node;
+}
+
+void DecisionTree::setRadiusNode(RadiusCondition* node)
+{
+	m_RadiusNode = node;
+}
+
+void DecisionTree::setCloseCombatNode(CloseCombatCondition* node)
+{
+	m_CloseCombatNode = node;
 }
 
 TreeNode* DecisionTree::addNode(TreeNode* parent, TreeNode* child_node, TreeNodeType type)
@@ -95,32 +112,3 @@ void DecisionTree::makeDecision()
 	}
 	static_cast<ActionNode*>(currentNode)->Action();
 }
-
-//void DecisionTree::m_buildTree()
-//{
-//	// Create and add root node.
-//	m_LOSNode = new LOSCondition();
-//	m_treeNodeList.push_back(m_LOSNode);
-//
-//	m_RadiusNode = new RadiusCondition();
-//	addNode(m_LOSNode, m_RadiusNode, LEFT_TREE_NODE);
-//	m_treeNodeList.push_back(m_RadiusNode);
-//
-//	m_CloseCombatNode = new CloseCombatCondition();
-//	addNode(m_LOSNode, m_CloseCombatNode, RIGHT_TREE_NODE);
-//	m_treeNodeList.push_back(m_CloseCombatNode);
-//
-//	TreeNode* patrolNode = addNode(m_RadiusNode, new PatrolAction(), LEFT_TREE_NODE);
-//	static_cast<ActionNode*>(patrolNode)->setAgent(m_agent);
-//	m_treeNodeList.push_back(patrolNode);
-//
-//	TreeNode* moveToLOSNode = addNode(m_RadiusNode, new MoveToLOSAction(), RIGHT_TREE_NODE);
-//	m_treeNodeList.push_back(moveToLOSNode);
-//
-//	TreeNode* moveToPlayerNode = addNode(m_CloseCombatNode, new MoveToPlayerAction(), LEFT_TREE_NODE);
-//	m_treeNodeList.push_back(moveToPlayerNode);
-//
-//	TreeNode* attackNode = addNode(m_CloseCombatNode, new AttackAction(), RIGHT_TREE_NODE);
-//	m_treeNodeList.push_back(attackNode);
-//	
-//}
