@@ -3,9 +3,10 @@
 #define __CLOSE_COMBAT_ENEMY__
 
 #include "Agent.h"
+#include "Sprite.h"
 #include "DecisionTree.h"
 
-class CloseCombatEnemy final : public Agent
+class CloseCombatEnemy final : public virtual Agent
 {
 public:
 	CloseCombatEnemy();
@@ -31,11 +32,11 @@ public:
 	void Seek();
 	void LookWhereYoureGoing(glm::vec2 target_direction);
 
-	//new action functions
-	void patrol() override;
-	void moveToPlayer() override;
-	
-	const DecisionTree* getTree();
+	// new action functions
+	void Patrol();
+	void MoveToPlayer();
+
+	const DecisionTree* getTree() { return m_tree; }
 
 private:
 	// private movement variables
@@ -52,7 +53,7 @@ private:
 	// private functions
 	void m_move();
 
-	//decision Tree
+	// Decision Tree 
 	DecisionTree* m_tree;
 	void m_buildTree();
 };

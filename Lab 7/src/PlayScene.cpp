@@ -27,13 +27,6 @@ void PlayScene::draw()
 void PlayScene::update()
 {
 	updateDisplayList();
-	//set agent tree conditions here. eventually replace parameters with distance checks.
-	//m_pSpaceShip->getTree()->getRadiusNode()->setIsWithinRadius(false);
-
-	//m_pSapceShip->getTree()->getCloseCombatNode()->setIsWithinCombatRange(false);
-
-	//or for rnaged combat enemy
-	//m_pSpaceShip->getTree()->getRangedCombatNode()->setIsWithingCombatRange(false);
 
 
 	m_pSpaceShip->getTree()->getLOSNode()->setLOS(m_pSpaceShip->checkAgentLOSToTarget(m_pSpaceShip, m_pTarget, m_pObstacles));
@@ -106,7 +99,7 @@ void PlayScene::start()
 	}
 	inFile.close();
 
-	m_pSpaceShip = new RangedCombatEnemy();
+	m_pSpaceShip = new CloseCombatEnemy();
 	m_pSpaceShip->getTransform()->position = glm::vec2(400.f, 40.f);
 	addChild(m_pSpaceShip, 3);
 

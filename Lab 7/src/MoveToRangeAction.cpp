@@ -12,8 +12,6 @@ MoveToRangeAction::~MoveToRangeAction()
 void MoveToRangeAction::Action()
 {
 	if (getAgent()->getActionState() != MOVE_TO_RANGE)
-	{
 		std::cout << "Performing " << m_name << std::endl;
-	}
-	getAgent()->moveToRange();
+	getAgent()->MoveToRange();
 }

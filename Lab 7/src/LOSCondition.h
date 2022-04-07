@@ -9,12 +9,9 @@ public:
 	LOSCondition(bool LOS = false);
 	virtual ~LOSCondition();
 
-	//get and set
-	void setLOS(bool state);
-	
+	// Getters and Setters
+
 	virtual bool Condition() override;
-private:
-	bool m_hasLOS;
 };
 
-#endif // !__LOS_CONDITION__
+#endif
