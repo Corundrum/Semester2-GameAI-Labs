@@ -15,6 +15,7 @@ enum GameObjectType {
 	RESTART_BUTTON,
 	BACK_BUTTON,
 	NEXT_BUTTON,
+	PROJECTILE,
 	NUM_OF_TYPES
 };
 #endif /* defined (__GAME_OBJECT_TYPE__) */

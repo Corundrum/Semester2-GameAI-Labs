@@ -13,5 +13,5 @@ void WaitBehindCoverAction::Action()
 {
 	if (getAgent()->getActionState() != WAIT_BEHIND_COVER)
 		std::cout << "Performing " << m_name << std::endl;
-	getAgent()->WaitBehindCover();
+	getAgent()->waitBehindCover();
 }

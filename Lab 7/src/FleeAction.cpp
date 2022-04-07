@@ -13,5 +13,5 @@ void FleeAction::Action()
 {
 	if (getAgent()->getActionState() != FLEE)
 		std::cout << "Performing " << m_name << std::endl;
-	getAgent()->Flee();
+	getAgent()->flee();
 }

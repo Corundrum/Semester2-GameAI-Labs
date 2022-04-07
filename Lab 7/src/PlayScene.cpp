@@ -29,7 +29,7 @@ void PlayScene::update()
 	updateDisplayList();
 
 
-	m_pSpaceShip->getTree()->getLOSNode()->setLOS(m_pSpaceShip->checkAgentLOSToTarget(m_pSpaceShip, m_pTarget, m_pObstacles));
+	//m_pSpaceShip->getTree()->getLOSNode()->setLOS(m_pSpaceShip->checkAgentLOSToTarget(m_pSpaceShip, m_pTarget, m_pObstacles));
 
 	// Now for the path_nodes LOS
 	switch (m_LOSMode)
@@ -69,6 +69,16 @@ void PlayScene::handleEvents()
 	{
 		TheGame::Instance().changeSceneState(END_SCENE);
 	}
+	//new for lab 7c
+	if (EventManager::Instance().keyPressed(SDL_SCANCODE_F))
+	{
+		//torpedo will fire here
+		m_pTorpedoes.push_back(new Torpedo(5.0f));
+		m_pTorpedoes.back()->getTransform()->position = m_pTarget->getTransform()->position;
+		SoundManager::Instance().playSound("torpedo");
+		addChild(m_pTorpedoes.back(), 2);
+	}
+
 }
 
 void PlayScene::start()
@@ -116,12 +126,14 @@ void PlayScene::start()
 
 	SoundManager::Instance().load("../Assets/audio/yay.ogg", "yay", SOUND_SFX);
 	SoundManager::Instance().load("../Assets/audio/thunder.ogg", "boom", SOUND_SFX);
-
-	/*SoundManager::Instance().load("../Assets/audio/mutara.mp3", "mutara", SOUND_MUSIC);
-	SoundManager::Instance().playMusic("mutara");*/
-
+	SoundManager::Instance().load("../Assets/audio/torpedo.ogg", "torpedo", SOUND_SFX);
+	
+	SoundManager::Instance().load("../Assets/audio/mutara.mp3", "mutara", SOUND_MUSIC);
 	SoundManager::Instance().load("../Assets/audio/klingon.mp3", "klingon", SOUND_MUSIC);
-	SoundManager::Instance().playMusic("klingon");
+
+	SoundManager::Instance().playMusic("mutara");
+	//SoundManager::Instance().playMusic("klingon");
+	
 	SoundManager::Instance().setMusicVolume(16);
 	
 

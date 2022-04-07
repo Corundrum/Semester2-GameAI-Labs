@@ -47,12 +47,12 @@ public:
 	void setAgent(Agent* agent);
 
 	// convenience functions
-	TreeNode* AddNode(TreeNode* parent, TreeNode* child_node, TreeNodeType type);
-	void Display();
+	TreeNode* addNode(TreeNode* parent, TreeNode* child_node, TreeNodeType type);
+	void display();
 	void Update();
 	void clean();
 
-	void MakeDecision(); // in order traversal
+	void makeDecision(); // in order traversal
 private:
 	Agent* m_agent;
 

@@ -13,5 +13,5 @@ void MoveToCoverAction::Action()
 {
 	if (getAgent()->getActionState() != MOVE_TO_COVER)
 		std::cout << "Performing " << m_name << std::endl;
-	getAgent()->MoveToCover();
+	getAgent()->moveToCover();
 }

@@ -101,7 +101,7 @@ void DecisionTree::setPlayerDetectedNode(PlayerDetectedCondition* node)
 
 // Add node
 
-TreeNode* DecisionTree::AddNode(TreeNode* parent, TreeNode* child_node, const TreeNodeType type)
+TreeNode* DecisionTree::addNode(TreeNode* parent, TreeNode* child_node, const TreeNodeType type)
 {
 	switch (type)
 	{
@@ -116,7 +116,7 @@ TreeNode* DecisionTree::AddNode(TreeNode* parent, TreeNode* child_node, const Tr
 	return child_node;
 }
 
-void DecisionTree::Display()
+void DecisionTree::display()
 {
 	for (auto* node : m_treeNodeList)
 	{
@@ -148,7 +148,7 @@ void DecisionTree::clean()
 // Make decision
 
 // in-order traversal
-void DecisionTree::MakeDecision()
+void DecisionTree::makeDecision()
 {
 	auto currentNode = m_treeNodeList[0]; // Start at root node.
 	while (!currentNode->m_isLeaf)

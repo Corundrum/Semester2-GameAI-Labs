@@ -7,6 +7,7 @@
 #include "MoveToPlayerAction.h"
 #include "PatrolAction.h"
 
+
 CloseCombatEnemy::CloseCombatEnemy()
 {
 	TextureManager::Instance().load("../Assets/textures/d7_small.png", "close_enemy");
@@ -46,7 +47,7 @@ CloseCombatEnemy::CloseCombatEnemy()
 	// Create decision tree
 	m_tree = new DecisionTree(this); // Overloaded constructor.
 	m_buildTree();
-	m_tree->Display(); // Optional.
+	m_tree->display(); // Optional.
 }
 
 CloseCombatEnemy::~CloseCombatEnemy()
@@ -71,7 +72,7 @@ void CloseCombatEnemy::draw()
 void CloseCombatEnemy::update()
 {
 	// Determine which action to perform
-	m_tree->MakeDecision();
+	m_tree->makeDecision();
 }
 
 void CloseCombatEnemy::clean()
@@ -222,28 +223,28 @@ void CloseCombatEnemy::m_buildTree()
 	m_tree->setPlayerDetectedNode(new PlayerDetectedCondition());
 	m_tree->getTree().push_back(m_tree->getPlayerDetectedNode());
 
-	TreeNode* patrolNode = m_tree->AddNode(m_tree->getPlayerDetectedNode(), new PatrolAction(), LEFT_TREE_NODE);
+	TreeNode* patrolNode = m_tree->addNode(m_tree->getPlayerDetectedNode(), new PatrolAction(), LEFT_TREE_NODE);
 	patrolNode->setAgent(this);
 	m_tree->getTree().push_back(patrolNode);
 
 	LOSCondition* losNode = new LOSCondition();
-	m_tree->AddNode(m_tree->getPlayerDetectedNode(), losNode, RIGHT_TREE_NODE);
+	m_tree->addNode(m_tree->getPlayerDetectedNode(), losNode, RIGHT_TREE_NODE);
 	losNode->setAgent(this);
 	m_tree->getTree().push_back(losNode);
 	
-	TreeNode* moveToLOSNode = m_tree->AddNode(losNode, new MoveToLOSAction(), LEFT_TREE_NODE);
+	TreeNode* moveToLOSNode = m_tree->addNode(losNode, new MoveToLOSAction(), LEFT_TREE_NODE);
 	moveToLOSNode->setAgent(this);
 	m_tree->getTree().push_back(moveToLOSNode);
 
 	m_tree->setCloseCombatNode(new CloseCombatCondition());
-	m_tree->AddNode(losNode, m_tree->getCloseCombatNode(), RIGHT_TREE_NODE);
+	m_tree->addNode(losNode, m_tree->getCloseCombatNode(), RIGHT_TREE_NODE);
 	m_tree->getTree().push_back(m_tree->getCloseCombatNode());
 
-	TreeNode* moveToPlayerNode = m_tree->AddNode(m_tree->getCloseCombatNode(), new MoveToPlayerAction(), LEFT_TREE_NODE);
+	TreeNode* moveToPlayerNode = m_tree->addNode(m_tree->getCloseCombatNode(), new MoveToPlayerAction(), LEFT_TREE_NODE);
 	moveToPlayerNode->setAgent(this);
 	m_tree->getTree().push_back(moveToPlayerNode);
 
-	TreeNode* attackNode = m_tree->AddNode(m_tree->getCloseCombatNode(), new AttackAction(), RIGHT_TREE_NODE);
+	TreeNode* attackNode = m_tree->addNode(m_tree->getCloseCombatNode(), new AttackAction(), RIGHT_TREE_NODE);
 	attackNode->setAgent(this);
 	m_tree->getTree().push_back(attackNode);
 }
