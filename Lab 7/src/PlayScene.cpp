@@ -28,6 +28,19 @@ void PlayScene::update()
 {
 	updateDisplayList();
 
+	m_pSpaceShip->getTree()->getEnemyHealthNode()->setHealth(m_pTarget->getHealth() > 25);
+	m_pSpaceShip->getTree()->getEnemyHitNode()->setIsHit(false);
+	m_pSpaceShip->checkAgentLOSToTarget(m_pSpaceShip, m_pTarget, m_pObstacles);
+
+	float distance = Util::distance(m_pSpaceShip->getTransform()->position, m_pTarget->getTransform()->position);
+	bool isDetected = distance < 450;
+
+	m_pSpaceShip->getTree()->getPlayerDetectedNode()->setDetected(isDetected);
+
+	bool inRange = distance >= 200 && distance <= 350;
+
+	m_pSpaceShip->getTree()->getRangedCombatNode()->setIsWithinCombatRange(inRange);
+
 
 	//m_pSpaceShip->getTree()->getLOSNode()->setLOS(m_pSpaceShip->checkAgentLOSToTarget(m_pSpaceShip, m_pTarget, m_pObstacles));
 
@@ -79,6 +92,19 @@ void PlayScene::handleEvents()
 		addChild(m_pTorpedoes.back(), 2);
 	}
 
+	if (EventManager::Instance().keyPressed(SDL_SCANCODE_D))
+	{
+		m_pTarget->setHealth(m_pTarget->getHealth() - 25);
+		std::cout << "Target at: " << m_pTarget->getHealth();
+	}
+
+	if (EventManager::Instance().keyPressed(SDL_SCANCODE_R))
+	{
+		m_pTarget->setHealth(100);
+		m_pSpaceShip->getTree()->getEnemyHitNode()->setIsHit(false);
+		m_pSpaceShip->getTree()->getPlayerDetectedNode()->setDetected(false);
+		std::cout << "Target Reset";
+	}
 }
 
 void PlayScene::start()
@@ -91,7 +117,7 @@ void PlayScene::start()
 
 	// Intentionally put target here so they can hide in cloud. ;)
 	m_pTarget = new Target();
-	m_pTarget->getTransform()->position = glm::vec2(500.f, 300.f);
+	m_pTarget->getTransform()->position = glm::vec2(100.f, 500.f);
 	addChild(m_pTarget, 2);
 
 	// New Obstacle creation
@@ -109,7 +135,7 @@ void PlayScene::start()
 	}
 	inFile.close();
 
-	m_pSpaceShip = new CloseCombatEnemy();
+	m_pSpaceShip = new RangedCombatEnemy();
 	m_pSpaceShip->getTransform()->position = glm::vec2(400.f, 40.f);
 	addChild(m_pSpaceShip, 3);
 

@@ -5,7 +5,7 @@
 #include "Agent.h"
 #include "DecisionTree.h"
 
-class RangedCombatEnemy final : public Agent
+class RangedCombatEnemy final : public virtual Agent
 {
 public:
 	RangedCombatEnemy();
@@ -32,8 +32,13 @@ public:
 	void LookWhereYoureGoing(glm::vec2 target_direction);
 
 	//new action functions
+	void flee() override;
 	void patrol() override;
+	void moveToLOS() override;
 	void moveToRange() override;
+	void waitBehindCover() override;
+	void moveToCover() override;
+	void attack() override;
 	
 	const DecisionTree* getTree();
 

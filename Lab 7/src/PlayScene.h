@@ -39,8 +39,8 @@ private:
 	// Game Objects
 	Background* m_pBG;
 	Target* m_pTarget;
-	CloseCombatEnemy* m_pSpaceShip;
-	//RangedCombatEnemy* m_pSpaceShip;
+	//CloseCombatEnemy* m_pSpaceShip;
+	RangedCombatEnemy* m_pSpaceShip;
 
 	std::vector<Obstacle*> m_pObstacles;
 	std::vector<Torpedo*> m_pTorpedoes;
