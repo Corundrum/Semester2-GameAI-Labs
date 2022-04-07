@@ -34,6 +34,8 @@ public:
 	glm::vec4 getLineColor(int index);
 	float getWhiskerAngle() const;
 
+	int getHealth() const { return m_health; }
+
 	const ActionState getActionState() { return m_state; }
 
 	// setters
@@ -50,6 +52,9 @@ public:
 	void setLineColor(int index, glm::vec4 color);
 	void setWhiskerAngle(float a);
 	void updateWhiskers(float a);
+
+	void setHealth(const int value) { m_health = value; }
+	void takeDamage(const int value) { m_health -= value; }
 
 	void setActionState(ActionState a) { m_state = a; }
 
