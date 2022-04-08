@@ -45,17 +45,24 @@ void PlayScene::update()
 	//m_pSpaceShip->getTree()->getLOSNode()->setLOS(m_pSpaceShip->checkAgentLOSToTarget(m_pSpaceShip, m_pTarget, m_pObstacles));
 
 	// Now for the path_nodes LOS
-	switch (m_LOSMode)
+	auto delta_time = Game::Instance().getDeltaTime();
+	
+	timer += delta_time;
+	if (timer >= 0.33)
 	{
-	case 0:
-		m_checkAllNodesWithTarget(m_pTarget);
-		break;
-	case 1:
-		m_checkAllNodesWithTarget(m_pSpaceShip);
-		break;
-	case 2:
-		m_checkAllNodesWithBoth();
-		break;
+		switch (m_LOSMode)
+		{
+		case 0:
+			m_checkAllNodesWithTarget(m_pTarget);
+			break;
+		case 1:
+			m_checkAllNodesWithTarget(m_pSpaceShip);
+			break;
+		case 2:
+			m_checkAllNodesWithBoth();
+			break;
+		}
+		timer = 0;
 	}
 }
 

@@ -56,6 +56,8 @@ private:
 	void m_clearNodes();
 	void m_setPathNodeLOSDistance(int dist);
 
+	float timer = 0;
+
 	int m_LOSMode; // 0 = nodes visible to target, 1 = nodes visible to player, 2 = nodes visible to both
 	int m_obstacleBuffer;
 	int m_pathNodeLOSDistance;
