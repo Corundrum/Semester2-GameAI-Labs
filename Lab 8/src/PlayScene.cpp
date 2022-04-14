@@ -28,11 +28,13 @@ void PlayScene::update()
 {
 	updateDisplayList();
 
+	auto target_position = m_pTarget->getTransform()->position;
+
 	m_pSpaceShip->getTree()->getEnemyHealthNode()->setHealth(m_pTarget->getHealth() > 25);
 	m_pSpaceShip->getTree()->getEnemyHitNode()->setIsHit(false);
 	m_pSpaceShip->checkAgentLOSToTarget(m_pSpaceShip, m_pTarget, m_pObstacles);
 
-	float distance = Util::distance(m_pSpaceShip->getTransform()->position, m_pTarget->getTransform()->position);
+	float distance = Util::distance(m_pSpaceShip->getTransform()->position, target_position);
 	bool isDetected = distance < 450;
 
 	m_pSpaceShip->getTree()->getPlayerDetectedNode()->setDetected(isDetected);
@@ -40,7 +42,6 @@ void PlayScene::update()
 	bool inRange = distance >= 200 && distance <= 350;
 
 	m_pSpaceShip->getTree()->getRangedCombatNode()->setIsWithinCombatRange(inRange);
-
 
 	//m_pSpaceShip->getTree()->getLOSNode()->setLOS(m_pSpaceShip->checkAgentLOSToTarget(m_pSpaceShip, m_pTarget, m_pObstacles));
 
@@ -142,7 +143,7 @@ void PlayScene::start()
 	}
 	inFile.close();
 
-	m_pSpaceShip = new RangedCombatEnemy();
+	m_pSpaceShip = new RangedCombatEnemy(this);
 	m_pSpaceShip->getTransform()->position = glm::vec2(400.f, 40.f);
 	addChild(m_pSpaceShip, 3);
 
@@ -160,12 +161,13 @@ void PlayScene::start()
 	SoundManager::Instance().load("../Assets/audio/yay.ogg", "yay", SOUND_SFX);
 	SoundManager::Instance().load("../Assets/audio/thunder.ogg", "boom", SOUND_SFX);
 	SoundManager::Instance().load("../Assets/audio/torpedo.ogg", "torpedo", SOUND_SFX);
+	SoundManager::Instance().load("../Assets/audio/torpedo_k.ogg", "torpedo_k", SOUND_SFX);
 	
 	SoundManager::Instance().load("../Assets/audio/mutara.mp3", "mutara", SOUND_MUSIC);
 	SoundManager::Instance().load("../Assets/audio/klingon.mp3", "klingon", SOUND_MUSIC);
 
-	SoundManager::Instance().playMusic("mutara");
-	//SoundManager::Instance().playMusic("klingon");
+	//SoundManager::Instance().playMusic("mutara");
+	SoundManager::Instance().playMusic("klingon");
 	
 	SoundManager::Instance().setMusicVolume(16);
 	
@@ -175,7 +177,17 @@ void PlayScene::start()
 
 void PlayScene::SpawnEnemyTorpedo()
 {
+	//set spawn
+	glm::vec2 spawn_position = m_pSpaceShip->getTransform()->position + m_pSpaceShip->getCurrentDirection() * 30.0f;
 
+	//set direction
+	glm::vec2 steering_direction = Util::normalize(m_pTarget->getTransform()->position - spawn_position);
+
+	//spawn torpedo
+	m_pTorpedoesK.push_back(new TorpedoK(5.0f, steering_direction));
+	m_pTorpedoesK.back()->getTransform()->position = spawn_position;
+	SoundManager::Instance().playSound("torpedo_k");
+	addChild(m_pTorpedoesK.back(), 2);
 }
 
 void PlayScene::GUI_Function()

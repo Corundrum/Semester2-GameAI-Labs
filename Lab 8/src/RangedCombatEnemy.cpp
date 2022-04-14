@@ -203,6 +203,9 @@ void RangedCombatEnemy::moveToLOS()
 		setActionState(action);
 	}
 	//action...
+	//arrive at the nearest pathnode with los position
+	//then turn to look at hte target
+	
 }
 
 void RangedCombatEnemy::moveToRange()
