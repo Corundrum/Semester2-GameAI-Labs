@@ -71,23 +71,25 @@ void PlayScene::update()
 	// Now for the path_nodes LOS
 	auto delta_time = Game::Instance().getDeltaTime();
 	
-	timer += delta_time;
-	if (timer >= 0.33)
-	{
-		switch (m_LOSMode)
-		{
-		case 0:
-			m_checkAllNodesWithTarget(m_pTarget);
-			break;
-		case 1:
-			m_checkAllNodesWithTarget(m_pSpaceShip);
-			break;
-		case 2:
-			m_checkAllNodesWithBoth();
-			break;
-		}
-		timer = 0;
-	}
+	m_walkOnShortestPath();
+
+	//timer += delta_time;
+	//if (timer >= 0.33)
+	//{
+	//	switch (m_LOSMode)
+	//	{
+	//	case 0:
+	//		m_checkAllNodesWithTarget(m_pTarget);
+	//		break;
+	//	case 1:
+	//		m_checkAllNodesWithTarget(m_pSpaceShip);
+	//		break;
+	//	case 2:
+	//		m_checkAllNodesWithBoth();
+	//		break;
+	//	}
+	//	timer = 0;
+	//}
 }
 
 void PlayScene::clean()
@@ -342,6 +344,62 @@ void PlayScene::m_setPathNodeLOSDistance(int dist)
 	{
 		path_node->setLOSDistance((float)dist);
 	}
+}
+
+void PlayScene::m_walkOnShortestPath()
+{
+	std::vector<PathNode*> closest_points;
+	PathNode* next_tile = nullptr;
+
+	for (unsigned i = 0; i < m_pGrid.size(); i++)
+	{
+		if (Util::distance(m_pCloseSpaceShip->getTransform()->position, m_pGrid[i]->getTransform()->position) <= 60)
+		{
+			closest_points.push_back(m_pGrid[i]);
+		}
+	}
+
+	for (auto path_node : m_pGrid)
+	{
+		path_node->setHasLOS(false);
+	}
+	
+	for (unsigned i = 0; i < closest_points.size(); i++)
+	{
+		if (next_tile == nullptr)
+		{
+			next_tile = closest_points[i];
+		}
+		else
+		{
+			if (Util::distance(closest_points[i]->getTransform()->position, m_pTarget->getTransform()->position) < Util::distance(next_tile->getTransform()->position, m_pTarget->getTransform()->position))
+			{
+				next_tile = closest_points[i];
+			}
+		}
+	}
+	std::cout << closest_points.size() << std::endl;
+
+	next_tile->setHasLOS(true);
+	
+
+	
+
+	/*for (short i = 0; i < closest_points.size(); i++)
+	{
+		if (Util::distance(closest_points[i]->getTransform()->position, m_pCloseSpaceShip->getTransform()->position) > 60)
+		{
+			closest_points[i]->setHasLOS(false);
+			closest_points.erase(closest_points.begin() + i);
+			closest_points.shrink_to_fit();
+		}
+		else
+		{
+			std::cout << closest_points.size() << std::endl;
+			closest_points[i]->setHasLOS(true);
+		}
+	}*/
+
 }
 
 void PlayScene::m_buildGrid()
