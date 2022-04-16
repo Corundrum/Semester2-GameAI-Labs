@@ -33,8 +33,10 @@ public:
 	void LookWhereYoureGoing(glm::vec2 target_direction);
 
 	// new action functions
-	void Patrol();
-	void MoveToPlayer();
+	void patrol() override;
+	void moveToLOS() override;
+	void moveToPlayer() override;
+	void attack() override;
 
 	const DecisionTree* getTree() { return m_tree; }
 

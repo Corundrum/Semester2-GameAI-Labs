@@ -121,12 +121,6 @@ void CloseCombatEnemy::setDesiredVelocity(const glm::vec2 target_position)
 
 void CloseCombatEnemy::Seek()
 {
-	// Find next waypoint:
-	if (Util::distance(m_patrol[m_waypoint], getTransform()->position) <= 10)
-	{
-		if (++m_waypoint == m_patrol.size()) m_waypoint = 0;
-		setTargetPosition(m_patrol[m_waypoint]);
-	}
 
 	setDesiredVelocity(getTargetPosition());
 
@@ -166,24 +160,53 @@ void CloseCombatEnemy::LookWhereYoureGoing(const glm::vec2 target_direction)
 	updateWhiskers(getWhiskerAngle());
 }
 
-void CloseCombatEnemy::Patrol()
+void CloseCombatEnemy::patrol()
 {
-	if (getActionState() != PATROL)
+	ActionState action = PATROL;
+	if (getActionState() != action)
 	{
-		// Initialize
-		setActionState(PATROL);
+		setActionState(action);
+	}
+	// Find next waypoint:
+	if (Util::distance(m_patrol[m_waypoint], getTransform()->position) < 10)
+	{
+		//if moved to last waypoint go back to beginning
+		if (++m_waypoint == m_patrol.size())
+		{
+			m_waypoint = 0;
+		}
+		setTargetPosition(m_patrol[m_waypoint]);
 	}
 	m_move();
 }
 
-void CloseCombatEnemy::MoveToPlayer()
+void CloseCombatEnemy::moveToLOS()
 {
-	if (getActionState() != MOVE_TO_PLAYER)
+	ActionState action = MOVE_TO_LOS;
+	if (getActionState() != action)
 	{
-		// Initialize. Like set move target to player.
-		setActionState(MOVE_TO_PLAYER);
+		setActionState(action);
 	}
-	// m_move();
+	//m_move();
+}
+
+void CloseCombatEnemy::moveToPlayer()
+{
+	ActionState action = MOVE_TO_PLAYER;
+	if (getActionState() != action)
+	{
+		setActionState(action);
+	}
+	 //m_move();
+}
+
+void CloseCombatEnemy::attack()
+{
+	ActionState action = ATTACK;
+	if (getActionState() != action)
+	{
+		setActionState(action);
+	}
 }
 
 void CloseCombatEnemy::m_move()

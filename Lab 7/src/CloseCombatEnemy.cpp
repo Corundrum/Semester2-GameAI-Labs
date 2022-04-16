@@ -168,10 +168,10 @@ void CloseCombatEnemy::LookWhereYoureGoing(const glm::vec2 target_direction)
 
 void CloseCombatEnemy::Patrol()
 {
-	if (getActionState() != PATROL)
+	ActionState action = PATROL;
+	if (getActionState() != action)
 	{
-		// Initialize
-		setActionState(PATROL);
+		setActionState(action);
 	}
 	m_move();
 }

@@ -28,20 +28,37 @@ void PlayScene::update()
 {
 	updateDisplayList();
 
-	auto target_position = m_pTarget->getTransform()->position;
 
-	m_pSpaceShip->getTree()->getEnemyHealthNode()->setHealth(m_pTarget->getHealth() > 25);
-	m_pSpaceShip->getTree()->getEnemyHitNode()->setIsHit(false);
-	m_pSpaceShip->checkAgentLOSToTarget(m_pSpaceShip, m_pTarget, m_pObstacles);
+	//Ranged Enemy
+	if (m_pSpaceShip != nullptr)
+	{
+		auto target_position = m_pTarget->getTransform()->position;
 
-	float distance = Util::distance(m_pSpaceShip->getTransform()->position, target_position);
-	bool isDetected = distance < 450;
+		m_pSpaceShip->getTree()->getEnemyHealthNode()->setHealth(m_pTarget->getHealth() > 25);
+		m_pSpaceShip->getTree()->getEnemyHitNode()->setIsHit(false);
+		m_pSpaceShip->checkAgentLOSToTarget(m_pSpaceShip, m_pTarget, m_pObstacles);
 
-	m_pSpaceShip->getTree()->getPlayerDetectedNode()->setDetected(isDetected);
+		float distance = Util::distance(m_pSpaceShip->getTransform()->position, target_position);
+		bool isDetected = distance < 450;
 
-	bool inRange = distance >= 200 && distance <= 350;
+		m_pSpaceShip->getTree()->getPlayerDetectedNode()->setDetected(isDetected);
 
-	m_pSpaceShip->getTree()->getRangedCombatNode()->setIsWithinCombatRange(inRange);
+		bool inRange = distance >= 200 && distance <= 350;
+
+		m_pSpaceShip->getTree()->getRangedCombatNode()->setIsWithinCombatRange(inRange);
+	}
+	//Close Enemy
+	if (m_pCloseSpaceShip != nullptr)
+	{
+		auto target_position = m_pTarget->getTransform()->position;
+		float distance = Util::distance(m_pCloseSpaceShip->getTransform()->position, target_position);
+		bool isDetected = distance < 450;
+		bool isCombatDistance = distance <= 100;
+
+		m_pCloseSpaceShip->getTree()->getPlayerDetectedNode()->setDetected(isDetected);
+		m_pCloseSpaceShip->checkAgentLOSToTarget(m_pCloseSpaceShip, m_pTarget, m_pObstacles);
+		m_pCloseSpaceShip->getTree()->getCloseCombatNode()->setWithinCombatRange(isCombatDistance);
+	}
 
 	//m_pSpaceShip->getTree()->getLOSNode()->setLOS(m_pSpaceShip->checkAgentLOSToTarget(m_pSpaceShip, m_pTarget, m_pObstacles));
 
@@ -143,9 +160,13 @@ void PlayScene::start()
 	}
 	inFile.close();
 
-	m_pSpaceShip = new RangedCombatEnemy(this);
-	m_pSpaceShip->getTransform()->position = glm::vec2(400.f, 40.f);
-	addChild(m_pSpaceShip, 3);
+	//m_pSpaceShip = new RangedCombatEnemy(this);
+	//m_pSpaceShip->getTransform()->position = glm::vec2(400.f, 40.f);
+	//addChild(m_pSpaceShip, 3);
+
+	m_pCloseSpaceShip = new CloseCombatEnemy();
+	m_pCloseSpaceShip->getTransform()->position = glm::vec2(400.0f, 40.0f);
+	addChild(m_pCloseSpaceShip, 3);
 
 	// Setup a few fields
 	m_LOSMode = 0;
@@ -248,22 +269,24 @@ void PlayScene::GUI_Function()
 	}
 
 	ImGui::Separator();
-
-	shipPosition[0] = m_pSpaceShip->getTransform()->position.x; 
-	shipPosition[1] = m_pSpaceShip->getTransform()->position.y;
-	if (ImGui::SliderInt2("Ship Position", shipPosition, 0, 800))
+	if (m_pSpaceShip != nullptr)
 	{
-		m_pSpaceShip->getTransform()->position.x = shipPosition[0];
-		m_pSpaceShip->getTransform()->position.y = shipPosition[1];
-	}
+		shipPosition[0] = m_pSpaceShip->getTransform()->position.x;
+		shipPosition[1] = m_pSpaceShip->getTransform()->position.y;
+		if (ImGui::SliderInt2("Ship Position", shipPosition, 0, 800))
+		{
+			m_pSpaceShip->getTransform()->position.x = shipPosition[0];
+			m_pSpaceShip->getTransform()->position.y = shipPosition[1];
+		}
 
-	// allow ship rotation
-	angle = m_pSpaceShip->getCurrentHeading();
-	if (ImGui::SliderInt("Ship Direction", &angle, -360, 360))
-	{
-		m_pSpaceShip->setCurrentHeading(angle);
-	}
 
+		// allow ship rotation
+		angle = m_pSpaceShip->getCurrentHeading();
+		if (ImGui::SliderInt("Ship Direction", &angle, -360, 360))
+		{
+			m_pSpaceShip->setCurrentHeading(angle);
+		}
+	}
 	ImGui::Separator();
 
 	static int targetPosition[] = { m_pTarget->getTransform()->position.x, m_pTarget->getTransform()->position.y };
