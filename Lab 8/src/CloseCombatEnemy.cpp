@@ -165,6 +165,7 @@ void CloseCombatEnemy::patrol()
 	ActionState action = PATROL;
 	if (getActionState() != action)
 	{
+		setTargetPosition(m_patrol[m_waypoint]);
 		setActionState(action);
 	}
 	// Find next waypoint:
@@ -197,7 +198,7 @@ void CloseCombatEnemy::moveToPlayer()
 	{
 		setActionState(action);
 	}
-	 //m_move();
+	 m_move();
 }
 
 void CloseCombatEnemy::attack()

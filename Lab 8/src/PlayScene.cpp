@@ -58,6 +58,12 @@ void PlayScene::update()
 		m_pCloseSpaceShip->getTree()->getPlayerDetectedNode()->setDetected(isDetected);
 		m_pCloseSpaceShip->checkAgentLOSToTarget(m_pCloseSpaceShip, m_pTarget, m_pObstacles);
 		m_pCloseSpaceShip->getTree()->getCloseCombatNode()->setWithinCombatRange(isCombatDistance);
+
+		if (m_pCloseSpaceShip->getActionState() == MOVE_TO_PLAYER)
+		{
+			m_pCloseSpaceShip->setTargetPosition(m_pTarget->getTransform()->position);
+		}
+
 	}
 
 	//m_pSpaceShip->getTree()->getLOSNode()->setLOS(m_pSpaceShip->checkAgentLOSToTarget(m_pSpaceShip, m_pTarget, m_pObstacles));
