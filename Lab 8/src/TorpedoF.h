@@ -1,17 +1,19 @@
 #pragma once
-#ifndef __TORPEDO_K__
-#define __TORPEDO_K__
+#ifndef __TORPEDO__
+#define __TORPEDO__
 
 #include "TorpedoBase.h"
 
-class TorpedoK final : public virtual TorpedoBase
+class TorpedoF final : public virtual TorpedoBase
 {
 public:
-	TorpedoK(float speed = 0.0f, glm::vec2 direction = {0,0});
-	~TorpedoK();
+	TorpedoF(float speed = 0.0f, glm::vec2 direction = {0,0});
+	~TorpedoF();
 
 	// Life Cycle Methods
 	virtual void draw() override;
+
+
 
 private:
 	void m_buildAnimations();

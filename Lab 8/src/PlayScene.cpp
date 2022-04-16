@@ -94,10 +94,10 @@ void PlayScene::handleEvents()
 	if (EventManager::Instance().keyPressed(SDL_SCANCODE_F))
 	{
 		//torpedo will fire here
-		m_pTorpedoes.push_back(new Torpedo(5.0f));
-		m_pTorpedoes.back()->getTransform()->position = m_pTarget->getTransform()->position;
+		m_torpedoes.push_back(new TorpedoF(5.0f, {1,0}));
+		m_torpedoes.back()->getTransform()->position = m_pTarget->getTransform()->position;
 		SoundManager::Instance().playSound("torpedo");
-		addChild(m_pTorpedoes.back(), 2);
+		addChild(m_torpedoes.back(), 2);
 	}
 
 	if (EventManager::Instance().keyPressed(SDL_SCANCODE_D))
@@ -184,10 +184,10 @@ void PlayScene::SpawnEnemyTorpedo()
 	glm::vec2 steering_direction = Util::normalize(m_pTarget->getTransform()->position - spawn_position);
 
 	//spawn torpedo
-	m_pTorpedoesK.push_back(new TorpedoK(5.0f, steering_direction));
-	m_pTorpedoesK.back()->getTransform()->position = spawn_position;
+	m_torpedoes.push_back(new TorpedoK(5.0f, steering_direction));
+	m_torpedoes.back()->getTransform()->position = spawn_position;
 	SoundManager::Instance().playSound("torpedo_k");
-	addChild(m_pTorpedoesK.back(), 2);
+	addChild(m_torpedoes.back(), 2);
 }
 
 void PlayScene::GUI_Function()

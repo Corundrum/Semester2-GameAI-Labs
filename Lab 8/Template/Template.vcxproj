@@ -190,7 +190,8 @@
     <ClCompile Include="..\src\SpaceShip.cpp" />
     <ClCompile Include="..\src\Sprite.cpp" />
     <ClCompile Include="..\src\Tile.cpp" />
-    <ClCompile Include="..\src\Torpedo.cpp" />
+    <ClCompile Include="..\src\TorpedoF.cpp" />
+    <ClCompile Include="..\src\TorpedoBase.cpp" />
     <ClCompile Include="..\src\TorpedoK.cpp" />
     <ClCompile Include="..\src\UIControl.cpp" />
     <ClCompile Include="..\src\DisplayObject.cpp" />
@@ -262,8 +263,9 @@
     <ClInclude Include="..\src\Sprite.h" />
     <ClInclude Include="..\src\Tile.h" />
     <ClInclude Include="..\src\TileStatus.h" />
-    <ClInclude Include="..\src\Torpedo.h" />
+    <ClInclude Include="..\src\TorpedoF.h" />
     <ClInclude Include="..\src\TorpedoAnimationState.h" />
+    <ClInclude Include="..\src\TorpedoBase.h" />
     <ClInclude Include="..\src\TorpedoK.h" />
     <ClInclude Include="..\src\TreeNode.h" />
     <ClInclude Include="..\src\TreeNodeType.h" />

@@ -1,7 +1,7 @@
 #include "TorpedoK.h"
 #include "TextureManager.h"
 
-TorpedoK::TorpedoK(float speed, glm::vec2 direction): m_currentAnimationState(FIRED)
+TorpedoK::TorpedoK(float speed, glm::vec2 direction): TorpedoBase(speed, direction)
 {
 	TextureManager::Instance().loadSpriteSheet(
 		"../Assets/sprites/torpedo.txt",
@@ -9,20 +9,6 @@ TorpedoK::TorpedoK(float speed, glm::vec2 direction): m_currentAnimationState(FI
 		"torpedo_k_sheet");
 
 	setSpriteSheet(TextureManager::Instance().getSpriteSheet("torpedo_k_sheet"));
-	
-	// set frame width
-	setWidth(64);
-
-	// set frame height
-	setHeight(64);
-
-	getTransform()->position = glm::vec2(400.0f, 300.0f);
-	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
-	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
-	getRigidBody()->isColliding = false;
-	setType(PROJECTILE);
-
-	m_direction = { direction.x * speed, direction.y * speed };
 
 	m_buildAnimations();
 }
@@ -37,7 +23,7 @@ void TorpedoK::draw()
 	const auto y = getTransform()->position.y;
 
 	// draw the player according to animation state
-	switch(m_currentAnimationState)
+	switch(getAnimationState())
 	{
 	case FIRED:
 		TextureManager::Instance().playAnimation("torpedo_k_sheet", getAnimation("fired"),
@@ -45,20 +31,7 @@ void TorpedoK::draw()
 		break;
 	default:
 		break;
-	}
-	
-}
-
-void TorpedoK::update()
-{
-	this->getTransform()->position += m_direction;
-}
-
-void TorpedoK::clean(){}
-
-void TorpedoK::setAnimationState(const TorpedoAnimationState new_state)
-{
-	m_currentAnimationState = new_state;
+	}	
 }
 
 void TorpedoK::m_buildAnimations()

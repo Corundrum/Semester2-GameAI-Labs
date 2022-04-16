@@ -1,41 +1,28 @@
-#include "Torpedo.h"
+#include "TorpedoF.h"
 #include "TextureManager.h"
 
-Torpedo::Torpedo(float speed): m_currentAnimationState(FIRED),m_speed(speed)
+TorpedoF::TorpedoF(float speed, glm::vec2 direction) : TorpedoBase(speed, direction)
 {
 	TextureManager::Instance().loadSpriteSheet(
 		"../Assets/sprites/torpedo.txt",
 		"../Assets/sprites/torpedo.png", 
 		"torpedosheet");
-
 	setSpriteSheet(TextureManager::Instance().getSpriteSheet("torpedosheet"));
-	
-	// set frame width
-	setWidth(64);
-
-	// set frame height
-	setHeight(64);
-
-	getTransform()->position = glm::vec2(400.0f, 300.0f);
-	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
-	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
-	getRigidBody()->isColliding = false;
-	setType(PROJECTILE);
 
 	m_buildAnimations();
 }
 
-Torpedo::~Torpedo()
+TorpedoF::~TorpedoF()
 = default;
 
-void Torpedo::draw()
+void TorpedoF::draw()
 {
 	// alias for x and y
 	const auto x = getTransform()->position.x;
 	const auto y = getTransform()->position.y;
 
 	// draw the player according to animation state
-	switch(m_currentAnimationState)
+	switch(getAnimationState())
 	{
 	case FIRED:
 		TextureManager::Instance().playAnimation("torpedosheet", getAnimation("fired"),
@@ -47,19 +34,7 @@ void Torpedo::draw()
 	
 }
 
-void Torpedo::update()
-{
-	this->getTransform()->position.x += m_speed;
-}
-
-void Torpedo::clean(){}
-
-void Torpedo::setAnimationState(const TorpedoAnimationState new_state)
-{
-	m_currentAnimationState = new_state;
-}
-
-void Torpedo::m_buildAnimations()
+void TorpedoF::m_buildAnimations()
 {
 	Animation firedAnimation = Animation();
 

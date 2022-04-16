@@ -222,10 +222,13 @@
     <ClCompile Include="..\src\WaitBehindCoverAction.cpp">
       <Filter>Decision\Actions</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Torpedo.cpp">
+    <ClCompile Include="..\src\TorpedoF.cpp">
       <Filter>Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="..\src\TorpedoK.cpp">
+      <Filter>Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TorpedoBase.cpp">
       <Filter>Game Objects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -464,13 +467,16 @@
     <ClInclude Include="..\src\WaitBehindCoverAction.h">
       <Filter>Decision\Actions</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Torpedo.h">
+    <ClInclude Include="..\src\TorpedoF.h">
       <Filter>Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="..\src\TorpedoAnimationState.h">
       <Filter>Enums</Filter>
     </ClInclude>
     <ClInclude Include="..\src\TorpedoK.h">
+      <Filter>Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\TorpedoBase.h">
       <Filter>Game Objects</Filter>
     </ClInclude>
   </ItemGroup>
