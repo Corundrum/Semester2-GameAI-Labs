@@ -53,7 +53,7 @@ void PlayScene::update()
 		auto target_position = m_pTarget->getTransform()->position;
 		float distance = Util::distance(m_pCloseSpaceShip->getTransform()->position, target_position);
 		bool isDetected = distance < 450;
-		bool isCombatDistance = distance <= 100;
+		bool isCombatDistance = distance <= 80;
 
 		m_pCloseSpaceShip->getTree()->getPlayerDetectedNode()->setDetected(isDetected);
 		m_pCloseSpaceShip->checkAgentLOSToTarget(m_pCloseSpaceShip, m_pTarget, m_pObstacles);
@@ -63,6 +63,10 @@ void PlayScene::update()
 		{
 			m_pCloseSpaceShip->setTargetPosition(m_pTarget->getTransform()->position);
 		}
+		if (m_pCloseSpaceShip->getActionState() == MOVE_TO_LOS)
+		{
+			m_pCloseSpaceShip->setTargetPosition(m_walkOnShortestPath()->getTransform()->position);
+		}
 
 	}
 
@@ -70,26 +74,24 @@ void PlayScene::update()
 
 	// Now for the path_nodes LOS
 	auto delta_time = Game::Instance().getDeltaTime();
-	
-	m_walkOnShortestPath();
 
-	//timer += delta_time;
-	//if (timer >= 0.33)
-	//{
-	//	switch (m_LOSMode)
-	//	{
-	//	case 0:
-	//		m_checkAllNodesWithTarget(m_pTarget);
-	//		break;
-	//	case 1:
-	//		m_checkAllNodesWithTarget(m_pSpaceShip);
-	//		break;
-	//	case 2:
-	//		m_checkAllNodesWithBoth();
-	//		break;
-	//	}
-	//	timer = 0;
-	//}
+	/*timer += delta_time;
+	if (timer >= 0.33)
+	{
+		switch (m_LOSMode)
+		{
+		case 0:
+			m_checkAllNodesWithTarget(m_pTarget);
+			break;
+		case 1:
+			m_checkAllNodesWithTarget(m_pSpaceShip);
+			break;
+		case 2:
+			m_checkAllNodesWithBoth();
+			break;
+		}
+		timer = 0;
+	}*/
 }
 
 void PlayScene::clean()
@@ -346,22 +348,19 @@ void PlayScene::m_setPathNodeLOSDistance(int dist)
 	}
 }
 
-void PlayScene::m_walkOnShortestPath()
+PathNode* PlayScene::m_walkOnShortestPath()
 {
 	std::vector<PathNode*> closest_points;
 	PathNode* next_tile = nullptr;
 
 	for (unsigned i = 0; i < m_pGrid.size(); i++)
 	{
-		if (Util::distance(m_pCloseSpaceShip->getTransform()->position, m_pGrid[i]->getTransform()->position) <= 60)
+		auto distance = Util::distance(m_pCloseSpaceShip->getTransform()->position, m_pGrid[i]->getTransform()->position);
+		if (distance <= 60 && distance > 20)
 		{
 			closest_points.push_back(m_pGrid[i]);
 		}
-	}
-
-	for (auto path_node : m_pGrid)
-	{
-		path_node->setHasLOS(false);
+		m_pGrid[i]->setHasLOS(false);
 	}
 	
 	for (unsigned i = 0; i < closest_points.size(); i++)
@@ -378,28 +377,11 @@ void PlayScene::m_walkOnShortestPath()
 			}
 		}
 	}
-	std::cout << closest_points.size() << std::endl;
 
 	next_tile->setHasLOS(true);
-	
+	//std::cout << closest_points.size() << std::endl;
 
-	
-
-	/*for (short i = 0; i < closest_points.size(); i++)
-	{
-		if (Util::distance(closest_points[i]->getTransform()->position, m_pCloseSpaceShip->getTransform()->position) > 60)
-		{
-			closest_points[i]->setHasLOS(false);
-			closest_points.erase(closest_points.begin() + i);
-			closest_points.shrink_to_fit();
-		}
-		else
-		{
-			std::cout << closest_points.size() << std::endl;
-			closest_points[i]->setHasLOS(true);
-		}
-	}*/
-
+	return next_tile;
 }
 
 void PlayScene::m_buildGrid()

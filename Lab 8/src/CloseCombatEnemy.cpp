@@ -188,7 +188,7 @@ void CloseCombatEnemy::moveToLOS()
 	{
 		setActionState(action);
 	}
-	//m_move();
+	m_move();
 }
 
 void CloseCombatEnemy::moveToPlayer()

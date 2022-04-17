@@ -61,7 +61,7 @@ private:
 	void m_checkAllNodesWithBoth();
 	void m_clearNodes();
 	void m_setPathNodeLOSDistance(int dist);
-	void m_walkOnShortestPath();
+	PathNode* m_walkOnShortestPath();
 
 	float timer = 0;
 
